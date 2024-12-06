@@ -1,0 +1,6 @@
+@ControlDeVenta_Proy_HostAddress = http://localhost:5037
+
+GET {{ControlDeVenta_Proy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
