@@ -10,5 +10,6 @@ namespace ControlDeVenta_Proy.src.Models
         public int Stock { get; set; }
         public int StockMin { get; set; }
         public List<SaleItem> SaleItems { get; } = new List<SaleItem>();
+        public List<Supply> Supplies { get; } = new List<Supply>();
     }
 }
