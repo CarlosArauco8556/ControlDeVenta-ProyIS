@@ -9,5 +9,6 @@ namespace ControlDeVenta_Proy.src.Models
         public double DiscountPercentage { get; set; }
         public int Stock { get; set; }
         public int StockMin { get; set; }
+        public List<SaleItem> SaleItems { get; } = new List<SaleItem>();
     }
 }
