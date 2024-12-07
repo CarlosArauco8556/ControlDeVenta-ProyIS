@@ -16,52 +16,62 @@ namespace ControlDeVenta_Proy.src.Data
         }
 
         public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<Supplier> Providers { get; set; } = null!;
-        public DbSet<Supply> Categories { get; set; } = null!;
         public DbSet<Invoice> Invoices { get; set; } = null!;
-        public DbSet<SaleItem> InvoiceDetails { get; set; } = null!;
-        public DbSet<InvoiceState> InvoiceDetail { get; set; } = null!;
+        public DbSet<InvoiceState> InvoiceStates { get; set; } = null!;
         public DbSet<PaymentMethod> PaymentMethods { get; set; } = null!;
+        public DbSet<SaleItem> SaleItems { get; set; } = null!;
+        public DbSet<Supplier> Suppliers { get; set; } = null!;
+        public DbSet<Supply> Supplies { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            List<IdentityRole> roles = new List<IdentityRole>
-            {
-                new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
-                new IdentityRole { Name = "Worker", NormalizedName = "WORKER" },
-                new IdentityRole { Name = "Client", NormalizedName = "CLIENT" }
-            };
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.SaleItems)
+                .WithOne(si => si.Product)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Supplies)
+                .WithOne(s => s.Product)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SaleItem>()
-                .HasKey(x => new { x.InvoiceId, x.ProductId });
-            
-            modelBuilder.Entity<SaleItem>()
-                .HasOne(x => x.Product)
-                .WithMany(x => x.SaleItems)
-                .HasForeignKey(x => x.ProductId);
+            modelBuilder.Entity<Supplier>()
+                .HasMany(s => s.Supplies)
+                .WithOne(s => s.Supplier)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SaleItem>()
-                .HasOne(x => x.Invoice)
-                .WithMany(x => x.SaleItems)
-                .HasForeignKey(x => x.InvoiceId);
+            modelBuilder.Entity<Invoice>()
+                .HasMany(i => i.SaleItems)
+                .WithOne(si => si.Invoice)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.User)
+                .WithMany(u => u.Invoices)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.InvoiceState)
+                .WithMany(is_ => is_.Invoices)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.PaymentMethod)
+                .WithMany(pm => pm.Invoices)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Supply>()
-                .HasKey(x => new { x.ProductId, x.SupplierId });
-            
+                .HasOne(s => s.Product)
+                .WithMany(p => p.Supplies)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Supply>()
-                .HasOne(x => x.Product)
-                .WithMany(x => x.Supplies)
-                .HasForeignKey(x => x.ProductId);
-            
-            modelBuilder.Entity<Supply>()
-                .HasOne(x => x.Supplier)
-                .WithMany(x => x.Supplies)
-                .HasForeignKey(x => x.SupplierId);
-                
+                .HasOne(s => s.Supplier)
+                .WithMany(s => s.Supplies)
+                .OnDelete(DeleteBehavior.Cascade);
         }
+
     }
 }

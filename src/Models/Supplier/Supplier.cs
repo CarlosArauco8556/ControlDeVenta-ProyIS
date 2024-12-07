@@ -8,6 +8,6 @@ namespace ControlDeVenta_Proy.src.Models
         public string Rut { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public List<Supply> Supplies { get; set; } = new List<Supply>();
+        public List<Supply> Supplies { get; } = new List<Supply>();
     }
 }
