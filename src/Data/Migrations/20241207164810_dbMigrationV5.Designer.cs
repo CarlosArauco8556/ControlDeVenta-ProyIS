@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241207054226_dbMigrationV4")]
-    partial class dbMigrationV4
+    [Migration("20241207164810_dbMigrationV5")]
+    partial class dbMigrationV5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,7 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -61,6 +62,7 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("PhoneNumberConfirmed")

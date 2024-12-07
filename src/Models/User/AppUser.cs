@@ -6,6 +6,8 @@ namespace ControlDeVenta_Proy.src.Models
     {
         public string Name { get; set; } = string.Empty;
         public string Rut { get; set; } = string.Empty;
+        public new string Email { get; set; } = string.Empty;
+        public new string PhoneNumber { get; set; } = string.Empty;
         public List<Invoice> Invoices { get; } = new List<Invoice>();
     }
 }
