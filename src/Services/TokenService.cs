@@ -6,20 +6,21 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Data;
+using ControlDeVenta_Proy.src.Interfaces;
 using ControlDeVenta_Proy.src.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ControlDeVenta_Proy.src.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly UserManager<AppUser> _userManager;
 
         private readonly SymmetricSecurityKey _key;
 
 
-        public TokenService(UserManager<AppUser> userManager, DataContext context)
+        public TokenService(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
 
