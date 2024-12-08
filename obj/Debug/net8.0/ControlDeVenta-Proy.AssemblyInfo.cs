@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ControlDeVenta-Proy")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+36def05e7e672f46a3964a34441d746901d798ba")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72e67f9401fd05ba0bedee5720f2b54ff0ec779f")]
 [assembly: System.Reflection.AssemblyProductAttribute("ControlDeVenta-Proy")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ControlDeVenta-Proy")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
