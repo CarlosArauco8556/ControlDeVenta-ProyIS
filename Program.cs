@@ -1,6 +1,8 @@
 using System.Text;
 using ControlDeVenta_Proy.src.Data;
+using ControlDeVenta_Proy.src.Interfaces;
 using ControlDeVenta_Proy.src.Models;
+using ControlDeVenta_Proy.src.Services;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +18,8 @@ Env.Load();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(
     opt => {
@@ -97,4 +101,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 app.Run();
