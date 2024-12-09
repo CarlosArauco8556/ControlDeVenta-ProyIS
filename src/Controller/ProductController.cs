@@ -63,5 +63,19 @@ namespace ControlDeVenta_Proy.src.Controller
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            try
+            {
+                var deletedProduct = await _productRepository.DeleteProduct(id);
+                return Ok(deletedProduct);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

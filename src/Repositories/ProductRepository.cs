@@ -44,9 +44,19 @@ namespace ControlDeVenta_Proy.src.Repositories
             return newProduct.MapToNewProductDto();
         }
 
-        public Task<NewPorductDto> DeleteProduct(int id)
+        public async Task<NewPorductDto> DeleteProduct(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                throw new Exception("Product not found.");
+            }
+            
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return product.MapToNewProductDto();
         }
 
         public async Task<IEnumerable<NewPorductDto>> GetProducts(QueryObject query)
