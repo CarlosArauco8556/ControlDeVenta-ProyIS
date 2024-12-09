@@ -58,9 +58,9 @@ namespace ControlDeVenta_Proy.src.Repositories
             return newSupplier.MapToNewSupplierDto();
         }
 
-        public async Task<NewSupplierDto> DeleteSupplier(int id)
+        public async Task<NewSupplierDto> DeleteSupplier(string nameSupplier)
         {
-            var existingSupplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.Id == id);
+            var existingSupplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.Name == nameSupplier);
             if(existingSupplier == null)
             {
                 throw new Exception("Supplier not found");

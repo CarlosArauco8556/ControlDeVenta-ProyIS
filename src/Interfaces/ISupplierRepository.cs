@@ -9,6 +9,6 @@ namespace ControlDeVenta_Proy.src.Interfaces
         Task<IEnumerable<NewSupplierDto>> GetSuppliers(QueryObjectSupplier query);
         Task<NewSupplierDto> AddSupplier(NewSupplierDto supplierDto);
         Task<NewSupplierDto> UpdateSupplier(string supplierName, NewSupplierDto supplierDto);
-        Task<NewSupplierDto> DeleteSupplier(int id);
+        Task<NewSupplierDto> DeleteSupplier(string supplierName);
     }
 }
