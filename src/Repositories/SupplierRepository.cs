@@ -1,5 +1,6 @@
 using ControlDeVenta_Proy.src.Data;
 using ControlDeVenta_Proy.src.DTOs;
+using ControlDeVenta_Proy.src.Helpers;
 using ControlDeVenta_Proy.src.Interfaces;
 using ControlDeVenta_Proy.src.Mappers;
 using ControlDeVenta_Proy.src.Models;
@@ -70,9 +71,33 @@ namespace ControlDeVenta_Proy.src.Repositories
             return existingSupplier.MapToNewSupplierDto();
         }
 
-        public Task<IEnumerable<NewSupplierDto>> GetSuppliers()
+        public async Task<IEnumerable<NewSupplierDto>> GetSuppliers(QueryObjectSupplier query)
         {
-            throw new NotImplementedException();
+            var suppliers = _context.Suppliers.Include(s => s.Products).AsQueryable();
+            if(!string.IsNullOrEmpty(query.textFilter))
+            {
+                suppliers = suppliers.Where(s => s.Name.Contains(query.textFilter) ||
+                                                s.Rut.Contains(query.textFilter) ||
+                                                s.PhoneNumber.Contains(query.textFilter) ||
+                                                s.Email.Contains(query.textFilter) ||
+                                                s.Products.Any(p => p.Name.Contains(query.textFilter)));
+            }
+
+            if(query.IsDescending)
+            {
+                suppliers = suppliers.OrderByDescending(s => s.Name);
+            }
+            else
+            {
+                suppliers = suppliers.OrderBy(s => s.Name);
+            }
+
+            var skipNumber = (query.pageNumber - 1) * query.pageSize;
+
+            return await suppliers.Select(s => s.MapToNewSupplierDto())
+                .Skip(skipNumber)
+                .Take(query.pageSize)
+                .ToListAsync();
         }
 
         public async Task<NewSupplierDto> UpdateSupplier(string supplierName, NewSupplierDto supplierDto)
