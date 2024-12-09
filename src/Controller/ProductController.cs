@@ -49,5 +49,19 @@ namespace ControlDeVenta_Proy.src.Controller
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] NewPorductDto product)
+        {
+            try
+            {
+                var updatedProduct = await _productRepository.UpdateProduct(id, product);
+                return Ok(updatedProduct);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

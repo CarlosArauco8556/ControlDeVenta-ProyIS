@@ -12,7 +12,7 @@ namespace ControlDeVenta_Proy.src.Interfaces
     {
         Task<IEnumerable<NewPorductDto>> GetProducts(QueryObject query);
         Task<NewPorductDto> AddProduct(Product product);
-        Task<NewPorductDto> UpdateProduct(Product product);
+        Task<NewPorductDto> UpdateProduct(int id, NewPorductDto product);
         Task<NewPorductDto> DeleteProduct(int id);
     }
 }

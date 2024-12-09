@@ -82,9 +82,45 @@ namespace ControlDeVenta_Proy.src.Repositories
                 .ToListAsync();
         }
 
-        public Task<NewPorductDto> UpdateProduct(Product product)
+        public async Task<NewPorductDto> UpdateProduct(int id, NewPorductDto product)
         {
-            throw new NotImplementedException();
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            
+            if (existingProduct == null)
+            {
+                throw new Exception("Product not found.");
+            }
+
+            bool nameChanged = existingProduct.Name != product.Name;
+
+            if (nameChanged)
+            {
+                var productValidation = await _context.Products
+                    .Where(p => p.Name == product.Name)
+                    .FirstOrDefaultAsync();
+
+                if (productValidation != null)
+                {
+                    throw new Exception("Product already exists.");
+                }
+            }
+
+            existingProduct.Name = product.Name;
+            existingProduct.Price = product.Price;
+            existingProduct.Stock = product.Stock;
+            existingProduct.StockMin = product.StockMin;
+            existingProduct.DiscountPercentage = product.DiscountPercentage;
+            
+            await _context.SaveChangesAsync();
+
+            var productUpdated = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (productUpdated == null)
+            {
+                throw new Exception("Failed to update product.");
+            }
+
+            return productUpdated.MapToNewProductDto();
         }
     }
 }
