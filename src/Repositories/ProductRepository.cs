@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Data;
+using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Helpers;
 using ControlDeVenta_Proy.src.Interfaces;
+using ControlDeVenta_Proy.src.Mappers;
 using ControlDeVenta_Proy.src.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,17 +21,35 @@ namespace ControlDeVenta_Proy.src.Repositories
             _context = context;
         }
 
-        public Task<Product> AddProduct(Product product)
+        public async Task<NewPorductDto> AddProduct(Product product)
+        {
+
+            var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Name == product.Name);
+
+            if (existingProduct != null)
+            {
+                throw new Exception("Product already exists.");
+            }
+
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+
+            var newProduct = await _context.Products.FirstOrDefaultAsync(p => p.Name == product.Name);
+
+            if (newProduct == null)
+            {
+                throw new Exception("Failed to add new product.");
+            }
+
+            return newProduct.MapToNewProductDto();
+        }
+
+        public Task<NewPorductDto> DeleteProduct(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Product> DeleteProduct(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Product>> GetProducts(QueryObject query)
+        public async Task<IEnumerable<NewPorductDto>> GetProducts(QueryObject query)
         {
             var products = _context.Products.AsQueryable();
 
@@ -56,11 +76,13 @@ namespace ControlDeVenta_Proy.src.Repositories
 
             var skipNumber = (query.pageNumber - 1) * query.pageSize;
 
-            return await products.Skip(skipNumber).Take(query.pageSize)
+            return await products.Select(p => p.MapToNewProductDto())
+                .Skip(skipNumber)
+                .Take(query.pageSize)
                 .ToListAsync();
         }
 
-        public Task<Product> UpdateProduct(Product product)
+        public Task<NewPorductDto> UpdateProduct(Product product)
         {
             throw new NotImplementedException();
         }
