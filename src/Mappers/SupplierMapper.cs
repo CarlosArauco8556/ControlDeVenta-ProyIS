@@ -5,20 +5,16 @@ namespace ControlDeVenta_Proy.src.Mappers
 {
     public static class SupplierMapper
     {
-        public static Supplier MapToNewSupplier(this NewSupplierDto supplierDto)
-        {
-            return new Supplier
-            {
-                Name = supplierDto.Name,
-                Rut = supplierDto.Rut,
-                PhoneNumber = supplierDto.PhoneNumber,
-                Email = supplierDto.Email,
-
-            };
-        }
         public static NewSupplierDto MapToNewSupplierDto(this Supplier supplier)
         {
-            
+            return new NewSupplierDto
+            {
+                Name = supplier.Name,
+                Rut = supplier.Rut,
+                PhoneNumber = supplier.PhoneNumber,
+                Email = supplier.Email,
+                ProductNames = supplier.Products.ConvertAll(p => p.Name),
+            };
         }
     }
 }

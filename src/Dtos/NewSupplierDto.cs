@@ -17,6 +17,6 @@ namespace ControlDeVenta_Proy.src.DTOs
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
         [Required]
-        public List<string> ProductNames { get; set; } = [];
+        public List<string> ProductNames { get; set; } = new List<string>();
     }
 }

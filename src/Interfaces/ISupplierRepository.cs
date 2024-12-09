@@ -6,7 +6,7 @@ namespace ControlDeVenta_Proy.src.Interfaces
     public interface ISupplierRepository
     {
         Task<IEnumerable<NewSupplierDto>> GetSuppliers();
-        Task<NewSupplierDto> AddSupplier(Supplier supplier);
+        Task<NewSupplierDto> AddSupplier(NewSupplierDto supplierDto);
         Task<NewSupplierDto> UpdateSupplier(Supplier supplier);
         Task<NewSupplierDto> DeleteSupplier(int id);
     }

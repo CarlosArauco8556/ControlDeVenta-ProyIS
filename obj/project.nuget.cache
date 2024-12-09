@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3fzXdbRpW+w=",
+  "dgSpecHash": "+pni/xoMXMA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\LenovoNT\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\ControlDeVenta-Proy.csproj",
+  "projectFilePath": "C:\\Users\\LenovoNT\\Desktop\\Projects_Codes_Diagrams\\VS_Codes\\Proyecto Integrador Software\\Sistema de Control de Venta\\ControlDeVenta-Proy\\ControlDeVenta-Proy.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\LenovoNT\\.nuget\\packages\\bogus\\35.6.1\\bogus.35.6.1.nupkg.sha512",
     "C:\\Users\\LenovoNT\\.nuget\\packages\\dotnetenv\\3.1.1\\dotnetenv.3.1.1.nupkg.sha512",

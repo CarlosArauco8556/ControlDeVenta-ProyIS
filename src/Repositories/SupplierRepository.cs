@@ -1,6 +1,7 @@
 using ControlDeVenta_Proy.src.Data;
 using ControlDeVenta_Proy.src.DTOs;
 using ControlDeVenta_Proy.src.Interfaces;
+using ControlDeVenta_Proy.src.Mappers;
 using ControlDeVenta_Proy.src.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,15 +15,34 @@ namespace ControlDeVenta_Proy.src.Repositories
         {
             _context = context;
         }
-
-        public async Task<NewSupplierDto> AddSupplier(Supplier supplier)
+        
+        public async Task<NewSupplierDto> AddSupplier(NewSupplierDto supplierDto)
         {
-            var existingSupplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.Email == supplier.Email);
+            var existingSupplier = await _context.Suppliers.FirstOrDefaultAsync(s => s.Email == supplierDto.Email);
 
             if(existingSupplier != null)
             {
                 throw new Exception("Supplier already exists");
             }
+
+            foreach (string productName in supplierDto.ProductNames)
+            {
+                var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == productName);
+
+                if(product == null)
+                {
+                    throw new Exception("Product not found");
+                }
+            }
+
+            var supplier = new Supplier
+            {
+                Name = supplierDto.Name,
+                Rut = supplierDto.Rut,
+                PhoneNumber = supplierDto.PhoneNumber,
+                Email = supplierDto.Email,
+                Products = await _context.Products.Where(p => supplierDto.ProductNames.Contains(p.Name)).ToListAsync(),
+            };
 
             await _context.Suppliers.AddAsync(supplier);
             await _context.SaveChangesAsync();
@@ -37,17 +57,17 @@ namespace ControlDeVenta_Proy.src.Repositories
             return newSupplier.MapToNewSupplierDto();
         }
 
-        public async Task<NewSupplierDto> DeleteSupplier(int id)
+        public Task<NewSupplierDto> DeleteSupplier(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<NewSupplierDto>> GetSuppliers()
+        public Task<IEnumerable<NewSupplierDto>> GetSuppliers()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<NewSupplierDto> UpdateSupplier(Supplier supplier)
+        public Task<NewSupplierDto> UpdateSupplier(Supplier supplier)
         {
             throw new NotImplementedException();
         }

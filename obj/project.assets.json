@@ -8799,19 +8799,21 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\LenovoNT\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\ControlDeVenta-Proy.csproj",
+      "projectUniqueName": "C:\\Users\\LenovoNT\\Desktop\\Projects_Codes_Diagrams\\VS_Codes\\Proyecto Integrador Software\\Sistema de Control de Venta\\ControlDeVenta-Proy\\ControlDeVenta-Proy.csproj",
       "projectName": "ControlDeVenta-Proy",
-      "projectPath": "C:\\Users\\LenovoNT\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\ControlDeVenta-Proy.csproj",
+      "projectPath": "C:\\Users\\LenovoNT\\Desktop\\Projects_Codes_Diagrams\\VS_Codes\\Proyecto Integrador Software\\Sistema de Control de Venta\\ControlDeVenta-Proy\\ControlDeVenta-Proy.csproj",
       "packagesPath": "C:\\Users\\LenovoNT\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\LenovoNT\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\obj\\",
+      "outputPath": "C:\\Users\\LenovoNT\\Desktop\\Projects_Codes_Diagrams\\VS_Codes\\Proyecto Integrador Software\\Sistema de Control de Venta\\ControlDeVenta-Proy\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\LenovoNT\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\LenovoNT\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -8899,7 +8901,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

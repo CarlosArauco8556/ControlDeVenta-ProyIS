@@ -38,6 +38,11 @@ namespace ControlDeVenta_Proy.src.Data
                 .WithOne(s => s.Supplier)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Supplier>()
+                .HasMany(s => s.Products)
+                .WithMany(p => p.Suppliers)
+                .UsingEntity(j => j.ToTable("SupplierProducts"));
+
             modelBuilder.Entity<Invoice>()
                 .HasMany(i => i.SaleItems)
                 .WithOne(si => si.Invoice)
