@@ -13,7 +13,6 @@ namespace ControlDeVenta_Proy.src.Dtos
 
         [Required]
         [StringLength(20, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 20 characters.")]
-        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Password must contain only letters and numbers.")]
         public string Password { get; set; } = null!;
     }
 }
