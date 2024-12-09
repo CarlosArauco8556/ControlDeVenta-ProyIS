@@ -8794,19 +8794,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\valle\\.nuget\\packages\\": {}
+    "C:\\Users\\LenovoNT\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\valle\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\ControlDeVenta-Proy.csproj",
+      "projectUniqueName": "C:\\Users\\LenovoNT\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\ControlDeVenta-Proy.csproj",
       "projectName": "ControlDeVenta-Proy",
-      "projectPath": "C:\\Users\\valle\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\ControlDeVenta-Proy.csproj",
-      "packagesPath": "C:\\Users\\valle\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\valle\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\obj\\",
+      "projectPath": "C:\\Users\\LenovoNT\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\ControlDeVenta-Proy.csproj",
+      "packagesPath": "C:\\Users\\LenovoNT\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\LenovoNT\\Desktop\\Proyecto Integardor de Software\\SI01v01\\ControlDeVenta-ProyIS\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\valle\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\LenovoNT\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
