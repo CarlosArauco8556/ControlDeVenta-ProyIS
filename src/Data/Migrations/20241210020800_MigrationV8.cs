@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class dbMigrationV5 : Migration
+    public partial class MigrationV8 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

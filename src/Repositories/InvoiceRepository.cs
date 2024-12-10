@@ -6,6 +6,7 @@ using ControlDeVenta_Proy.src.Data;
 using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Interfaces;
 using ControlDeVenta_Proy.src.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ControlDeVenta_Proy.src.Repositories
@@ -13,10 +14,12 @@ namespace ControlDeVenta_Proy.src.Repositories
     public class InvoiceRepository : IInvioce
     {
         private readonly DataContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public InvoiceRepository(DataContext context)
+        public InvoiceRepository(DataContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<Invoice> GenerateInvoice(ClientDTO client)
@@ -24,27 +27,23 @@ namespace ControlDeVenta_Proy.src.Repositories
             
             var newclient = new AppUser();
 
-            if (_context.Users.Any(u => u.Rut == client.Rut))
-            {
-                newclient = _context.Users.FirstOrDefault(u => u.Rut == client.Rut);
-            }
-            else
+            if (_userManager.FindByEmailAsync(client.Email).Result == null)
             {
                 newclient = new AppUser
                 {
-                    Name = client.Name,
-                    Rut = client.Rut,
+                    UserName = client.Email,
                     Email = client.Email,
                     PhoneNumber = client.PhoneNumber,
+                    Name = client.Name,
+                    Rut = client.Rut
                 };
-            }
 
-            if (newclient != null)
+                await _userManager.CreateAsync(newclient);
+                await _userManager.AddToRoleAsync(newclient, "Client");
+            }else
             {
-                _context.Users.Add(newclient);
+                newclient = await _userManager.FindByEmailAsync(client.Email);
             }
-
-            await _context.SaveChangesAsync();
 
             var invoiceState = _context.InvoiceStates.FirstOrDefault(i => i.Name == "Pendiente");
 
@@ -67,8 +66,8 @@ namespace ControlDeVenta_Proy.src.Repositories
                 PriceWithoutVAT = 0,
                 TotalVAT = 0,
                 FinalPrice = 0,
-                UserId = newclient?.Id ?? "0",
-                User = newclient == null || newclient.Id == "0" ? new AppUser() : newclient,
+                UserId = newclient?.Id ?? throw new Exception("User creation failed"),
+                User = newclient ?? throw new Exception("User creation failed"),
                 InvoiceStateId = invoiceState?.Id ?? 1,
                 InvoiceState = invoiceState ?? throw new Exception("Invoice state not found"),
                 PaymentMethodId = paymentMethod.Id,

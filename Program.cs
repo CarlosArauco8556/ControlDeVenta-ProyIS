@@ -22,6 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IInvioce, InvoiceRepository>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(
     opt => {

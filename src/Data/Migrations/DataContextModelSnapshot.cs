@@ -412,19 +412,19 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Invoice", b =>
                 {
                     b.HasOne("ControlDeVenta_Proy.src.Models.InvoiceState", "InvoiceState")
-                        .WithMany("Invoices")
+                        .WithMany()
                         .HasForeignKey("InvoiceStateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ControlDeVenta_Proy.src.Models.PaymentMethod", "PaymentMethod")
-                        .WithMany("Invoices")
+                        .WithMany()
                         .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ControlDeVenta_Proy.src.Models.AppUser", "User")
-                        .WithMany("Invoices")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -525,24 +525,9 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.AppUser", b =>
-                {
-                    b.Navigation("Invoices");
-                });
-
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Invoice", b =>
                 {
                     b.Navigation("SaleItems");
-                });
-
-            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.InvoiceState", b =>
-                {
-                    b.Navigation("Invoices");
-                });
-
-            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.PaymentMethod", b =>
-                {
-                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Product", b =>

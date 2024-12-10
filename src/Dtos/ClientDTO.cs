@@ -21,6 +21,5 @@ namespace ControlDeVenta_Proy.src.Dtos
         public string PhoneNumber { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public int PaymentMethodId { get; set; }
-        public PaymentMethod PaymentMethod { get; set; } = null!;
     }
 }

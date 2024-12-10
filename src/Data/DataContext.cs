@@ -47,21 +47,6 @@ namespace ControlDeVenta_Proy.src.Data
                 .WithOne(si => si.Invoice)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Invoice>()
-                .HasOne(i => i.User)
-                .WithMany(u => u.Invoices)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Invoice>()
-                .HasOne(i => i.InvoiceState)
-                .WithMany(is_ => is_.Invoices)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Invoice>()
-                .HasOne(i => i.PaymentMethod)
-                .WithMany(pm => pm.Invoices)
-                .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<Supply>()
                 .HasOne(s => s.Product)
                 .WithMany(p => p.Supplies)
