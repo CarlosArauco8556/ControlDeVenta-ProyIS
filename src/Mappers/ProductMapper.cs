@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Models;
 
@@ -9,7 +5,7 @@ namespace ControlDeVenta_Proy.src.Mappers
 {
     public static class ProductMapper
     {
-        public static Product MapToCreateProduct(this NewPorductDto newProductDto)
+        public static Product MapToCreateProduct(this NewProductDto newProductDto)
         {
             return new Product
             {
@@ -21,9 +17,9 @@ namespace ControlDeVenta_Proy.src.Mappers
             };
         }
 
-        public static NewPorductDto MapToNewProductDto(this Product product)
+        public static NewProductDto MapToNewProductDto(this Product product)
         {
-            return new NewPorductDto
+            return new NewProductDto
             {
                 Name = product.Name,
                 Price = product.Price,

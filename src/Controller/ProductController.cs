@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Helpers;
 using ControlDeVenta_Proy.src.Interfaces;
-using ControlDeVenta_Proy.src.Mappers;
-using ControlDeVenta_Proy.src.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

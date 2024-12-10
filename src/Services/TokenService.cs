@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using ControlDeVenta_Proy.src.Data;
 using ControlDeVenta_Proy.src.Interfaces;
 using ControlDeVenta_Proy.src.Models;
 using Microsoft.AspNetCore.Identity;
