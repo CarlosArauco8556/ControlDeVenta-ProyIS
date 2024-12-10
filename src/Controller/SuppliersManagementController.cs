@@ -25,7 +25,7 @@ namespace ControlDeVenta_Proy.src.Controller
             try
             {
                 var newSupplier = await _supplierRepository.AddSupplier(supplierDto);
-                return Ok(newSupplier);
+                return Ok(new{Message="Supplier added.", newSupplier});
             }
             catch (Exception e)
             {
@@ -39,20 +39,20 @@ namespace ControlDeVenta_Proy.src.Controller
             try
             {
                 var updatedSupplier = await _supplierRepository.UpdateSupplier(nameSupplier, supplierDto);
-                return Ok(updatedSupplier);
+                return Ok(new{Message="Supplier updated.", updatedSupplier});
             } catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{supplierName}")]
         public async Task<IActionResult> deleteSupplier(string supplierName)
         {
             try
             {
                 var deletedSupplier = await _supplierRepository.DeleteSupplier(supplierName);
-                return Ok(deletedSupplier);
+                return Ok(new{Message="Supplier deleted.", deletedSupplier});
             }catch (Exception e){
                 return BadRequest(e.Message);
             }
