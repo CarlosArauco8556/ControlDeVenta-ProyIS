@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Interfaces;
 using ControlDeVenta_Proy.src.Mappers;
@@ -23,7 +19,7 @@ namespace ControlDeVenta_Proy.src.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] NewPorductDto product)
+        public async Task<IActionResult> AddProduct([FromBody] NewProductDto product)
         {
             try
             {
@@ -37,7 +33,7 @@ namespace ControlDeVenta_Proy.src.Controller
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] NewPorductDto product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] NewProductDto product)
         {
             try
             {

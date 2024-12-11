@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Data;
 using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Helpers;
@@ -21,7 +17,7 @@ namespace ControlDeVenta_Proy.src.Repositories
             _context = context;
         }
 
-        public async Task<NewPorductDto> AddProduct(Product product)
+        public async Task<NewProductDto> AddProduct(Product product)
         {
 
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Name == product.Name);
@@ -44,7 +40,7 @@ namespace ControlDeVenta_Proy.src.Repositories
             return newProduct.MapToNewProductDto();
         }
 
-        public async Task<NewPorductDto> DeleteProduct(int id)
+        public async Task<NewProductDto> DeleteProduct(int id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
@@ -59,7 +55,7 @@ namespace ControlDeVenta_Proy.src.Repositories
             return product.MapToNewProductDto();
         }
 
-        public async Task<IEnumerable<NewPorductDto>> GetProducts(QueryObject query)
+        public async Task<IEnumerable<NewProductDto>> GetProducts(QueryObject query)
         {
             var products = _context.Products.AsQueryable();
 
@@ -92,7 +88,7 @@ namespace ControlDeVenta_Proy.src.Repositories
                 .ToListAsync();
         }
 
-        public async Task<NewPorductDto> UpdateProduct(int id, NewPorductDto product)
+        public async Task<NewProductDto> UpdateProduct(int id, NewProductDto product)
         {
             var existingProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
             

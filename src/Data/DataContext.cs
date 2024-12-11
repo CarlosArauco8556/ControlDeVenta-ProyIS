@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -41,6 +37,11 @@ namespace ControlDeVenta_Proy.src.Data
                 .HasMany(s => s.Supplies)
                 .WithOne(s => s.Supplier)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Supplier>()
+                .HasMany(s => s.Products)
+                .WithMany(p => p.Suppliers)
+                .UsingEntity(j => j.ToTable("SupplierProducts"));
 
             modelBuilder.Entity<Invoice>()
                 .HasMany(i => i.SaleItems)
