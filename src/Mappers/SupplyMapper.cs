@@ -6,9 +6,9 @@ namespace ControlDeVenta_Proy.src.Mappers
 {
     public static class SupplyMapper
     {
-        public static NewSupplyDto MapToNewSupplyDto(this Supply supply)
+        public static GetSupplyDto MapToGetSupplyDto(this Supply supply)
         {
-            return new NewSupplyDto
+            return new GetSupplyDto
             {
                 OrderDate = supply.OrderDate,
                 DeliveryDate = supply.DeliveryDate,
@@ -26,7 +26,6 @@ namespace ControlDeVenta_Proy.src.Mappers
                 OrderDate = newSupplyDto.OrderDate,
                 DeliveryDate = newSupplyDto.DeliveryDate,
                 Quantity = newSupplyDto.Quantity,
-                TotalPrice = newSupplyDto.TotalPrice,
                 ProductId = newSupplyDto.ProductId,
                 SupplierId = newSupplyDto.SupplierId,
             };

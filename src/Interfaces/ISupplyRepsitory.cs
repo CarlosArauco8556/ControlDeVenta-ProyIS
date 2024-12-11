@@ -6,9 +6,9 @@ namespace ControlDeVenta_Proy.src.Interfaces
 {
     public interface ISupplyRepsitory
     {
-        Task<IEnumerable<NewSupplyDto>> GetSupplies(QueryObjectSupplier query);
-        Task<NewSupplyDto> AddSupply(NewSupplyDto supplyDto);
-        Task<NewSupplierDto> UpdateSupply(int productId, int supplierId, NewSupplierDto supplierDto);
-        Task<NewSupplierDto> DeleteSupply(int productId, int supplierId);
+        Task<IEnumerable<GetSupplyDto>> GetSupplies(QueryObjectSupplier query);
+        Task<GetSupplyDto> AddSupply(NewSupplyDto supplyDto);
+        Task<GetSupplyDto> UpdateSupply(int productId, int supplyId, NewSupplyDto supplyDto);
+        Task<GetSupplyDto> DeleteSupply(int productId, int supplyId);
     }
 }

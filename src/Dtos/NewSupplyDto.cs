@@ -8,11 +8,9 @@ namespace ControlDeVenta_Proy.src.DTOs
         [Required]
         public DateTime OrderDate { get; set; }
         [Required]
-        public DateTime DeliveryDate { get; set; }
+        public DateTime DeliveryDate { get; set; } = DateTime.Now;
         [Required]
         public int Quantity { get; set; }
-        [Required]
-        public double TotalPrice { get; set; }
         [Required]
         public int ProductId { get; set; }
         [Required]
