@@ -1,15 +1,21 @@
 
-namespace ControlDeVenta_Proy.src.Models
+using System.ComponentModel.DataAnnotations;
+
+namespace ControlDeVenta_Proy.src.DTOs
 {
-    public class Supply
+    public class NewSupplyDto
     {
+        [Required]
         public DateTime OrderDate { get; set; }
+        [Required]
         public DateTime DeliveryDate { get; set; }
+        [Required]
         public int Quantity { get; set; }
+        [Required]
         public double TotalPrice { get; set; }
+        [Required]
         public int ProductId { get; set; }
-        public Product Product { get; set; } = null!;
+        [Required]
         public int SupplierId { get; set; }
-        public Supplier Supplier { get; set; } = null!;
     }
 }

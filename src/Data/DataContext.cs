@@ -62,15 +62,20 @@ namespace ControlDeVenta_Proy.src.Data
                 .HasOne(i => i.PaymentMethod)
                 .WithMany(pm => pm.Invoices)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Supply>()
+                .HasKey(s => new { s.ProductId, s.SupplierId });
 
             modelBuilder.Entity<Supply>()
                 .HasOne(s => s.Product)
                 .WithMany(p => p.Supplies)
+                .HasForeignKey(s => s.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Supply>()
                 .HasOne(s => s.Supplier)
                 .WithMany(s => s.Supplies)
+                .HasForeignKey(s => s.SupplierId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 
