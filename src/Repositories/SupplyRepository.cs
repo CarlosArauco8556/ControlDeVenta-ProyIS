@@ -69,9 +69,19 @@ namespace ControlDeVenta_Proy.src.Repositories
             return newSupply.MapToGetSupplyDto();
         }
 
-        public Task<GetSupplyDto> DeleteSupply(int productId, int supplierId)
+        public async Task<GetSupplyDto> DeleteSupply(int productId, int supplierId)
         {
-            throw new NotImplementedException();
+            var supply = await _context.Supplies.FirstOrDefaultAsync(s => s.ProductId == productId && s.SupplierId == supplierId);
+            if(supply == null)
+            {
+                throw new Exception("Supply not found");
+            }
+            
+            _context.Supplies.Remove(supply);
+            await _context.SaveChangesAsync();
+
+            return supply.MapToGetSupplyDto();
+
         }
 
         public Task<IEnumerable<GetSupplyDto>> GetSupplies(QueryObjectSupplier query)
