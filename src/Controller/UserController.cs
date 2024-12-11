@@ -27,7 +27,16 @@ namespace ControlDeVenta_Proy.src.Controller
             var appUsersDto = appUsers.Select(appUser => appUser.ToGetAppUsuarioDto());
             return Ok(appUsersDto);
         }
-        
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteUser(string id)
+        {
+            var resultado = await _userRepository.DeleteUserById(id);
+            if(!resultado)
+            {
+                return NotFound(new {message = "Usuario NO encontrado."});
+            }
+            return Ok(new {message = "Usuario eliminado exitosamente"});
+        }
     }
 }

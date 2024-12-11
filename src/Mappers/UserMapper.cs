@@ -13,6 +13,7 @@ namespace ControlDeVenta_Proy.src.Mappers
         {
             return new AppUserGetDto
             {
+                Id = appUserModel.Id,
                 Name = appUserModel.Name,
                 Rut = appUserModel.Rut,
                 Email = appUserModel.Email,

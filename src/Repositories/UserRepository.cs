@@ -17,9 +17,26 @@ namespace ControlDeVenta_Proy.src.Repositories
             _context = context;
         }
 
+        public async Task<bool> DeleteUserById(string id)
+        {
+            var user = await GetUserById(id);
+            if(user == null)
+            {
+                return false;
+            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<IEnumerable<AppUser>> GetAllUsers()
         {
             return await _context.Users.OfType<AppUser>().ToListAsync();
+        }
+
+        public async Task<AppUser?> GetUserById(string id)
+        {
+            return await _context.Users.OfType<AppUser>().FirstOrDefaultAsync(u => u.Id == id);
         }
     }
 }

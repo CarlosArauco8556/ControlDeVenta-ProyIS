@@ -10,6 +10,8 @@ namespace ControlDeVenta_Proy.src.Dtos
     public class AppUserGetDto
     {
         [Required]
+        public string Id { get; set;} = string.Empty;
+        [Required]
         public string Name { get; set; } = string.Empty;
         [Required]
         public string Rut { get; set; } = string.Empty;

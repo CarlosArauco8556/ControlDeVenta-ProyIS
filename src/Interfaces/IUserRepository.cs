@@ -9,5 +9,7 @@ namespace ControlDeVenta_Proy.src.Interfaces
     public interface IUserRepository
     {
         Task<IEnumerable<AppUser>> GetAllUsers();
+        Task<AppUser?> GetUserById(string id);
+        Task<bool> DeleteUserById(string id);
     }
 }
