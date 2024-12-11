@@ -1,4 +1,5 @@
 
+using ControlDeVenta_Proy.src.Controller;
 using ControlDeVenta_Proy.src.Data;
 using ControlDeVenta_Proy.src.DTOs;
 using ControlDeVenta_Proy.src.Helpers;
@@ -84,9 +85,42 @@ namespace ControlDeVenta_Proy.src.Repositories
 
         }
 
-        public Task<IEnumerable<GetSupplyDto>> GetSupplies(QueryObjectSupplier query)
+        public async Task<IEnumerable<GetSupplyDto>> GetSupplies(QueryObjectSupplier query)
         {
-            throw new NotImplementedException();
+            var supplies = _context.Supplies.AsQueryable(); 
+
+            if(!string.IsNullOrEmpty(query.textFilter))
+            {
+                supplies = supplies.Where(s => s.ProductId.ToString().Contains(query.textFilter) ||
+                                               s.SupplierId.ToString().Contains(query.textFilter) ||
+                                               s.OrderDate.ToString().Contains(query.textFilter) ||
+                                               s.DeliveryDate.ToString().Contains(query.textFilter) ||
+                                               s.Quantity.ToString().Contains(query.textFilter) ||
+                                               s.TotalPrice.ToString().Contains(query.textFilter));
+            }
+
+            if(!string.IsNullOrEmpty(query.orderBy))
+            {
+                supplies = query.orderBy.ToLower() switch
+                {
+                    "productid" => query.IsDescending ? supplies.OrderByDescending(s => s.ProductId) : supplies.OrderBy(s => s.ProductId),
+                    "supplierid" => query.IsDescending ? supplies.OrderByDescending(s => s.SupplierId) : supplies.OrderBy(s => s.SupplierId),
+                    "orderdate" => query.IsDescending ? supplies.OrderByDescending(s => s.OrderDate) : supplies.OrderBy(s => s.OrderDate),
+                    "deliverydate" => query.IsDescending ? supplies.OrderByDescending(s => s.DeliveryDate) : supplies.OrderBy(s => s.DeliveryDate),
+                    "quantity" => query.IsDescending ? supplies.OrderByDescending(s => s.Quantity) : supplies.OrderBy(s => s.Quantity),
+                    "totalprice" => query.IsDescending ? supplies.OrderByDescending(s => s.TotalPrice) : supplies.OrderBy(s => s.TotalPrice),
+                    _ => supplies
+                };
+            }
+
+            if(supplies.Count() == 0)
+            {
+                throw new Exception("Supplies not found.");
+            }
+
+            var skipNumber = (query.pageNumber - 1) * query.pageSize;
+
+            return await supplies.Skip(skipNumber).Take(query.pageSize).Select(s => s.MapToGetSupplyDto()).ToListAsync();
         }
 
         public Task<GetSupplyDto> UpdateSupply(int productId, int supplierId, NewSupplyDto supplyDto)
