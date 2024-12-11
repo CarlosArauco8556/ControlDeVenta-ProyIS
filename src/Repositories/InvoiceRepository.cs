@@ -15,49 +15,43 @@ namespace ControlDeVenta_Proy.src.Repositories
     {
         private readonly DataContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IInvoiceItem _invoiceItemRepository;
+        private readonly ISaleItem _saleItemRepository;
 
-        public InvoiceRepository(DataContext context, UserManager<AppUser> userManager)
+        public InvoiceRepository(DataContext context, UserManager<AppUser> userManager, IInvoiceItem invoiceItemRepository, ISaleItem saleItemRepository)
         {
             _context = context;
             _userManager = userManager;
+            _invoiceItemRepository = invoiceItemRepository;
+            _saleItemRepository = saleItemRepository;
         }
-
+    
         public async Task<Invoice> GenerateInvoice(ClientDTO client)
         {
-            
-            var newclient = new AppUser();
+            if (string.IsNullOrWhiteSpace(client.Email)) throw new ArgumentException("Client email is required.");
 
-            if (_userManager.FindByEmailAsync(client.Email).Result == null)
+            var existingUser = await _userManager.FindByEmailAsync(client.Email);
+            var newclient = existingUser ?? new AppUser
             {
-                newclient = new AppUser
-                {
-                    UserName = client.Email,
-                    Email = client.Email,
-                    PhoneNumber = client.PhoneNumber,
-                    Name = client.Name,
-                    Rut = client.Rut
-                };
+                UserName = client.Email,
+                Email = client.Email,
+                PhoneNumber = client.PhoneNumber,
+                Name = client.Name,
+                Rut = client.Rut
+            };
 
-                await _userManager.CreateAsync(newclient);
+            if (existingUser == null)
+            {
+                var result = await _userManager.CreateAsync(newclient);
+                if (!result.Succeeded)
+                    throw new Exception("Failed to create user.");
+
                 await _userManager.AddToRoleAsync(newclient, "Client");
-            }else
-            {
-                newclient = await _userManager.FindByEmailAsync(client.Email);
             }
 
-            var invoiceState = _context.InvoiceStates.FirstOrDefault(i => i.Name == "Pendiente");
+            var invoiceState = _context.InvoiceStates.FirstOrDefault(i => i.Name == "Pendiente") ?? throw new KeyNotFoundException("Invoice state 'Pendiente' not found.");
 
-            if (invoiceState == null)
-            {
-                throw new Exception("Invoice state not found");
-            }
-
-            var paymentMethod = _context.PaymentMethods.FirstOrDefault(p => p.Id == client.PaymentMethodId);
-
-            if (paymentMethod == null)
-            {
-                throw new Exception("Payment method not found");
-            }
+            var paymentMethod = _context.PaymentMethods.FirstOrDefault(p => p.Id == client.PaymentMethodId) ?? throw new KeyNotFoundException($"Payment method with ID {client.PaymentMethodId} not found.");
 
             var invoice = new Invoice
             {
@@ -66,19 +60,29 @@ namespace ControlDeVenta_Proy.src.Repositories
                 PriceWithoutVAT = 0,
                 TotalVAT = 0,
                 FinalPrice = 0,
-                UserId = newclient?.Id ?? throw new Exception("User creation failed"),
-                User = newclient ?? throw new Exception("User creation failed"),
-                InvoiceStateId = invoiceState?.Id ?? 1,
-                InvoiceState = invoiceState ?? throw new Exception("Invoice state not found"),
-                PaymentMethodId = paymentMethod.Id,
-                PaymentMethod = paymentMethod
+                UserId = newclient.Id,
+                InvoiceStateId = invoiceState.Id,
+                PaymentMethodId = paymentMethod.Id
             };
 
             await _context.Invoices.AddAsync(invoice);
             await _context.SaveChangesAsync();
 
+            var items = await _invoiceItemRepository.GetInvoiceItemsFromCookies();
+
+            if (items == null || !items.Any())
+                throw new InvalidOperationException("No items in the invoice.");
+
+            var saleItems = await _saleItemRepository.CreateSaleItem(invoice.Id, items.Select(i => i.Id).ToList());
+
+            invoice.SaleItems = saleItems;
+            invoice.PriceWithoutVAT = saleItems.Sum(s => s.UnitPrice);
+            invoice.TotalVAT = invoice.PriceWithoutVAT * 0.19;
+            invoice.FinalPrice = invoice.PriceWithoutVAT + invoice.TotalVAT;
+
             return invoice;
         }
+
 
         public async Task<IEnumerable<Invoice>> GetInvoices()
         {

@@ -23,6 +23,9 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IInvioce, InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceItem, InvoiceItemsService>();
+builder.Services.AddScoped<ISaleItem, SaleItemRepository>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(
     opt => {
@@ -104,5 +107,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

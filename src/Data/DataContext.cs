@@ -27,35 +27,31 @@ namespace ControlDeVenta_Proy.src.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.SaleItems)
-                .WithOne(si => si.Product)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<SaleItem>()
+                .HasKey(pc => new { pc.InvoiceId, pc.ProductId });
 
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.Supplies)
-                .WithOne(s => s.Product)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<SaleItem>()
+                .HasOne(pc => pc.Invoice)
+                .WithMany(c => c.SaleItems)
+                .HasForeignKey(pc => pc.InvoiceId);
 
-            modelBuilder.Entity<Supplier>()
-                .HasMany(s => s.Supplies)
-                .WithOne(s => s.Supplier)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Invoice>()
-                .HasMany(i => i.SaleItems)
-                .WithOne(si => si.Invoice)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<SaleItem>()
+                .HasOne(pc => pc.Product)
+                .WithMany(p => p.SaleItems)
+                .HasForeignKey(pc => pc.ProductId); 
 
             modelBuilder.Entity<Supply>()
-                .HasOne(s => s.Product)
+                .HasKey(pp => new { pp.SupplierId, pp.ProductId }); 
+
+            modelBuilder.Entity<Supply>()
+                .HasOne(pp => pp.Supplier) 
                 .WithMany(p => p.Supplies)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(pp => pp.SupplierId); 
 
             modelBuilder.Entity<Supply>()
-                .HasOne(s => s.Supplier)
-                .WithMany(s => s.Supplies)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(pp => pp.Product)
+                .WithMany(p => p.Supplies)
+                .HasForeignKey(pp => pp.ProductId);
         }
 
     }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationV8 : Migration
+    public partial class MigrationV12 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -259,18 +259,17 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 name: "Supplies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SupplierId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    TotalPrice = table.Column<double>(type: "REAL", nullable: false),
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
-                    SupplierId = table.Column<int>(type: "INTEGER", nullable: false)
+                    TotalPrice = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Supplies", x => x.Id);
+                    table.PrimaryKey("PK_Supplies", x => new { x.SupplierId, x.ProductId });
                     table.ForeignKey(
                         name: "FK_Supplies_Products_ProductId",
                         column: x => x.ProductId,
@@ -289,17 +288,15 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 name: "SaleItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     UnitPrice = table.Column<double>(type: "REAL", nullable: false),
-                    TotalPrice = table.Column<double>(type: "REAL", nullable: false),
-                    InvoiceId = table.Column<int>(type: "INTEGER", nullable: false)
+                    TotalPrice = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SaleItems", x => x.Id);
+                    table.PrimaryKey("PK_SaleItems", x => new { x.InvoiceId, x.ProductId });
                     table.ForeignKey(
                         name: "FK_SaleItems_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
@@ -367,11 +364,6 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SaleItems_InvoiceId",
-                table: "SaleItems",
-                column: "InvoiceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SaleItems_ProductId",
                 table: "SaleItems",
                 column: "ProductId");
@@ -380,11 +372,6 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 name: "IX_Supplies_ProductId",
                 table: "Supplies",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Supplies_SupplierId",
-                table: "Supplies",
-                column: "SupplierId");
         }
 
         /// <inheritdoc />

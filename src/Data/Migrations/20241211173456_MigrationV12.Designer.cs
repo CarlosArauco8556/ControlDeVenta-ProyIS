@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241210020800_MigrationV8")]
-    partial class MigrationV8
+    [Migration("20241211173456_MigrationV12")]
+    partial class MigrationV12
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -196,10 +196,6 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.SaleItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("InvoiceId")
                         .HasColumnType("INTEGER");
 
@@ -215,9 +211,7 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                     b.Property<double>("UnitPrice")
                         .HasColumnType("REAL");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
+                    b.HasKey("InvoiceId", "ProductId");
 
                     b.HasIndex("ProductId");
 
@@ -253,33 +247,30 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Supply", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SupplierId")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("REAL");
 
-                    b.HasKey("Id");
+                    b.HasKey("SupplierId", "ProductId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("SupplierId");
 
                     b.ToTable("Supplies");
                 });

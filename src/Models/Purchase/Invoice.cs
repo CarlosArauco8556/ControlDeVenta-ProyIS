@@ -10,7 +10,9 @@ namespace ControlDeVenta_Proy.src.Models
         public AppUser User { get; set; } = null!;
         public int InvoiceStateId { get; set; }
         public InvoiceState InvoiceState { get; set; } = null!;
-        public List<SaleItem> SaleItems { get; } = new List<SaleItem>();
+        
+        [System.Text.Json.Serialization.JsonIgnore]
+        public List<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
         public double PriceWithoutVAT { get; set; }
         public double TotalVAT { get; set; }
         public double FinalPrice { get; set; } 
