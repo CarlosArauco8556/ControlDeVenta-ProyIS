@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241211213558_Migrationv12")]
-    partial class Migrationv12
+    [Migration("20241212220912_Migrationv13")]
+    partial class Migrationv13
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,9 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                     b.Property<double>("FinalPrice")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("InvoiceCodeId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("InvoiceStateId")
                         .HasColumnType("INTEGER");
 
@@ -127,6 +130,8 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InvoiceCodeId");
 
                     b.HasIndex("InvoiceStateId");
 
@@ -192,6 +197,21 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Purchase.InvoiceCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InvoiceCodes");
                 });
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.SaleItem", b =>
@@ -405,6 +425,12 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Invoice", b =>
                 {
+                    b.HasOne("ControlDeVenta_Proy.src.Models.Purchase.InvoiceCode", "InvoiceCode")
+                        .WithMany()
+                        .HasForeignKey("InvoiceCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ControlDeVenta_Proy.src.Models.InvoiceState", "InvoiceState")
                         .WithMany()
                         .HasForeignKey("InvoiceStateId")
@@ -422,6 +448,8 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("InvoiceCode");
 
                     b.Navigation("InvoiceState");
 

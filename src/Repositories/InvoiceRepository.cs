@@ -18,13 +18,15 @@ namespace ControlDeVenta_Proy.src.Repositories
         private readonly UserManager<AppUser> _userManager;
         private readonly IInvoiceItem _invoiceItemRepository;
         private readonly ISaleItem _saleItemRepository;
+        private readonly IInvoiceCode _invoiceCodeRepository;
 
-        public InvoiceRepository(DataContext context, UserManager<AppUser> userManager, IInvoiceItem invoiceItemRepository, ISaleItem saleItemRepository)
+        public InvoiceRepository(DataContext context, UserManager<AppUser> userManager, IInvoiceItem invoiceItemRepository, ISaleItem saleItemRepository, IInvoiceCode invoiceCodeRepository)
         {
             _context = context;
             _userManager = userManager;
             _invoiceItemRepository = invoiceItemRepository;
             _saleItemRepository = saleItemRepository;
+            _invoiceCodeRepository = invoiceCodeRepository;
         }
 
         public async Task DeleteInvoice(int invoiceId)
@@ -44,31 +46,44 @@ namespace ControlDeVenta_Proy.src.Repositories
         {
             if (string.IsNullOrWhiteSpace(client.Email)) throw new ArgumentException("Client email is required.");
 
-            var existingUser = await _userManager.FindByEmailAsync(client.Email);
-            var newclient = existingUser ?? new AppUser
-            {
-                UserName = client.Email,
-                Email = client.Email,
-                PhoneNumber = client.PhoneNumber,
-                Name = client.Name,
-                Rut = client.Rut
-            };
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == client.Email);
+            
+            var newclient = new AppUser();
 
             if (existingUser == null)
             {
+                newclient = new AppUser
+                {
+                    UserName = client.Email,
+                    Email = client.Email,
+                    PhoneNumber = client.PhoneNumber,
+                    Name = client.Name,
+                    Rut = client.Rut
+                };
+
                 var result = await _userManager.CreateAsync(newclient);
                 if (!result.Succeeded)
                     throw new Exception("Failed to create user.");
 
                 await _userManager.AddToRoleAsync(newclient, "Client");
+            } else 
+            {   
+                newclient = existingUser;
             }
 
             var invoiceState = _context.InvoiceStates.FirstOrDefault(i => i.Name == "Pendiente") ?? throw new KeyNotFoundException("Invoice state 'Pendiente' not found.");
 
             var paymentMethod = _context.PaymentMethods.FirstOrDefault(p => p.Id == client.PaymentMethodId) ?? throw new KeyNotFoundException($"Payment method with ID {client.PaymentMethodId} not found.");
 
+            var invoiceCode = await _invoiceCodeRepository.GenerateCode();
+
+            if (invoiceCode == null)
+                throw new InvalidOperationException("Failed to generate invoice code.");
+
             var invoice = new Invoice
             {
+                InvoiceCodeId = invoiceCode.Id,
+                InvoiceCode = invoiceCode,
                 Description = client.Description,
                 CreationDate = DateTime.Now,
                 PriceWithoutVAT = 0,

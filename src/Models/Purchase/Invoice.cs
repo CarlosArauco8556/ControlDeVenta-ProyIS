@@ -1,9 +1,13 @@
 
+using ControlDeVenta_Proy.src.Models.Purchase;
+
 namespace ControlDeVenta_Proy.src.Models
 {
     public class Invoice
     {
         public int Id { get; set; }
+        public int InvoiceCodeId { get; set; }
+        public InvoiceCode InvoiceCode { get; set; } = null!;
         public string Description { get; set; } = string.Empty;
         public DateTime CreationDate { get; set; }
         public string UserId { get; set; } = null!;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Models;
+using ControlDeVenta_Proy.src.Models.Purchase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace ControlDeVenta_Proy.src.Data
         public DbSet<SaleItem> SaleItems { get; set; } = null!;
         public DbSet<Supplier> Suppliers { get; set; } = null!;
         public DbSet<Supply> Supplies { get; set; } = null!;
+        public DbSet<InvoiceCode> InvoiceCodes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Migrationv12 : Migration
+    public partial class Migrationv13 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,6 +50,19 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoiceCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Code = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceCodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,6 +236,7 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    InvoiceCodeId = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
@@ -239,6 +253,12 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         name: "FK_Invoices_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invoices_InvoiceCodes_InvoiceCodeId",
+                        column: x => x.InvoiceCodeId,
+                        principalTable: "InvoiceCodes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -349,6 +369,11 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Invoices_InvoiceCodeId",
+                table: "Invoices",
+                column: "InvoiceCodeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Invoices_InvoiceStateId",
                 table: "Invoices",
                 column: "InvoiceStateId");
@@ -412,6 +437,9 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "InvoiceCodes");
 
             migrationBuilder.DropTable(
                 name: "InvoiceStates");
