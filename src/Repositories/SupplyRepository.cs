@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControlDeVenta_Proy.src.Repositories
 {
-    public class SupplyRepository : ISupplyRepsitory
+    public class SupplyRepository : ISupplyRepository
     {
         public readonly DataContext _context;
         public SupplyRepository(DataContext context)

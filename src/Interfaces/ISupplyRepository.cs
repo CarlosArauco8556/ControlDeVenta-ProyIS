@@ -4,7 +4,7 @@ using ControlDeVenta_Proy.src.Helpers;
 
 namespace ControlDeVenta_Proy.src.Interfaces
 {
-    public interface ISupplyRepsitory
+    public interface ISupplyRepository
     {
         Task<IEnumerable<GetSupplyDto>> GetSupplies(QueryObjectSupplier query);
         Task<GetSupplyDto> AddSupply(NewSupplyDto supplyDto);

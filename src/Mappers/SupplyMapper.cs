@@ -15,7 +15,9 @@ namespace ControlDeVenta_Proy.src.Mappers
                 Quantity = supply.Quantity,
                 TotalPrice = supply.TotalPrice,
                 ProductId = supply.ProductId,
-                SupplierId = supply.SupplierId,
+                SupplyId = supply.SupplierId,
+                ProductName = supply.Product.Name,
+                SupplyName = supply.Supplier.Name
             };
         }
 
