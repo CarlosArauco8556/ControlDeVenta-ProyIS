@@ -28,24 +28,24 @@ namespace ControlDeVenta_Proy.src.Controller
             }
         }
 
-        [HttpPut("{productId}/{supplierId}")]
-        public async Task<IActionResult> UpdateSupply(int productId, int supplierId, [FromBody] NewSupplyDto supplyDto)
+        [HttpPut("{supplyId}")]
+        public async Task<IActionResult> UpdateSupply(int supplyId, [FromBody] NewSupplyDto supplyDto)
         {
             try
             {
-                var updatedSuply = await _supplyrepository.UpdateSupply(productId, supplierId, supplyDto);
+                var updatedSuply = await _supplyrepository.UpdateSupply(supplyId, supplyDto);
                 return Ok(new { Message = "Supply updated.", updatedSuply});
             } catch(Exception e){
                 return BadRequest(e.Message);
             }
         }
 
-        [HttpDelete("{productId}/{supplierId}")]
-        public async Task<IActionResult> DeleteSupply(int productId, int supplierId)
+        [HttpDelete("{supplyId}")]
+        public async Task<IActionResult> DeleteSupply(int supplyId)
         {
             try
             {
-                var deletedSupply = await _supplyrepository.DeleteSupply(productId, supplierId);
+                var deletedSupply = await _supplyrepository.DeleteSupply(supplyId);
                 return Ok(new { Message = "Supply deleted.", deletedSupply});
             } catch (Exception e){
                 return BadRequest(e.Message);

@@ -8,7 +8,7 @@ namespace ControlDeVenta_Proy.src.Interfaces
     {
         Task<IEnumerable<GetSupplyDto>> GetSupplies(QueryObjectSupplier query);
         Task<GetSupplyDto> AddSupply(NewSupplyDto supplyDto);
-        Task<GetSupplyDto> UpdateSupply(int productId, int supplyId, NewSupplyDto supplyDto);
-        Task<GetSupplyDto> DeleteSupply(int productId, int supplyId);
+        Task<GetSupplyDto> UpdateSupply(int supplyId, NewSupplyDto supplyDto);
+        Task<GetSupplyDto> DeleteSupply(int supplyId);
     }
 }

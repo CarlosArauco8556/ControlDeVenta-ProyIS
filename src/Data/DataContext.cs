@@ -62,10 +62,10 @@ namespace ControlDeVenta_Proy.src.Data
                 .HasOne(i => i.PaymentMethod)
                 .WithMany(pm => pm.Invoices)
                 .OnDelete(DeleteBehavior.Cascade);
-            
-            modelBuilder.Entity<Supply>()
-                .HasKey(s => new { s.ProductId, s.SupplierId });
 
+            modelBuilder.Entity<Supply>()
+                .HasKey(s => s.Id);
+                
             modelBuilder.Entity<Supply>()
                 .HasOne(s => s.Product)
                 .WithMany(p => p.Supplies)
