@@ -32,29 +32,38 @@ namespace ControlDeVenta_Proy.src.Services
             return Task.CompletedTask;
         }
 
-        public Task<List<Product>> GetInvoiceItemsFromCookies()
+        public Task<Dictionary<int, int>> GetInvoiceItemsFromCookies()
         {
-            var cartItems = new List<Product>();
+            var cartItems = new Dictionary<int, int>();
             var context = _httpContextAccessor.HttpContext;
+
             if (context != null)
             {
                 var cartCookie = context.Request.Cookies["InvoiceItem"];
                 if (!string.IsNullOrEmpty(cartCookie))
                 {
-                    cartItems = JsonConvert.DeserializeObject<List<Product>>(cartCookie);
+                    try
+                    {
+
+                        cartItems = JsonConvert.DeserializeObject<Dictionary<int, int>>(cartCookie);
+                    }
+                    catch (JsonSerializationException ex)
+                    {
+                        Console.WriteLine($"Error during deserialization: {ex.Message}");
+                    }
                 }
             }
-            return Task.FromResult(cartItems ?? new List<Product>());
+            return Task.FromResult(cartItems ?? new Dictionary<int, int>());
         }
+
 
         public Task RemoveInvoiceItem(int productId)
         {
             var context = _httpContextAccessor.HttpContext;
             var invoiceItems = GetInvoiceItemsFromCookies().Result;
-            var product = invoiceItems.FirstOrDefault(p => p.Id == productId);
-            if (product != null)
+            if (invoiceItems.ContainsKey(productId))
             {
-                invoiceItems.Remove(product);
+                invoiceItems.Remove(productId);
             }
             if (context != null)
             {
@@ -67,7 +76,7 @@ namespace ControlDeVenta_Proy.src.Services
             return Task.CompletedTask;
         }
 
-        public async Task SaveInvoiceItemsToCookies(int productId)
+        public async Task SaveInvoiceItemsToCookies(int productId, int quantity)
         {
             var context = _httpContextAccessor.HttpContext;
             var invoiceItems = GetInvoiceItemsFromCookies().Result;
@@ -76,7 +85,14 @@ namespace ControlDeVenta_Proy.src.Services
 
             if (product != null)
             {
-                invoiceItems.Add(product);
+                if (invoiceItems.ContainsKey(productId))
+                {
+                    invoiceItems[productId] += quantity;
+                }
+                else
+                {
+                    invoiceItems.Add(productId, quantity);
+                }
             }else{
                 throw new Exception("Product not found");
             }
@@ -91,5 +107,9 @@ namespace ControlDeVenta_Proy.src.Services
             }
         }
 
+        public Task UpdateInvoiceItemsToCookies(int productId, int quantity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

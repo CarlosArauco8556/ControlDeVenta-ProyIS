@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Data;
 using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Interfaces;
+using ControlDeVenta_Proy.src.Mappers;
 using ControlDeVenta_Proy.src.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +26,8 @@ namespace ControlDeVenta_Proy.src.Repositories
             _invoiceItemRepository = invoiceItemRepository;
             _saleItemRepository = saleItemRepository;
         }
-    
-        public async Task<Invoice> GenerateInvoice(ClientDTO client)
+
+        public async Task<InvoiceDto> GenerateInvoice(ClientDTO client)
         {
             if (string.IsNullOrWhiteSpace(client.Email)) throw new ArgumentException("Client email is required.");
 
@@ -73,29 +74,84 @@ namespace ControlDeVenta_Proy.src.Repositories
             if (items == null || !items.Any())
                 throw new InvalidOperationException("No items in the invoice.");
 
-            var saleItems = await _saleItemRepository.CreateSaleItem(invoice.Id, items.Select(i => i.Id).ToList());
+            var saleItems = await _saleItemRepository.CreateSaleItem(invoice.Id, items);
 
             invoice.SaleItems = saleItems;
             invoice.PriceWithoutVAT = saleItems.Sum(s => s.UnitPrice);
             invoice.TotalVAT = invoice.PriceWithoutVAT * 0.19;
             invoice.FinalPrice = invoice.PriceWithoutVAT + invoice.TotalVAT;
 
-            return invoice;
+            await _context.SaveChangesAsync();
+
+            await _invoiceItemRepository.ClearInvoiceItemsInCookie();
+            return InvoiceMapper.MapInvoiceToDTO(invoice, InvoiceMapper.ToSaleItemDto(saleItems));
         }
 
 
-        public async Task<IEnumerable<Invoice>> GetInvoices()
+        public async Task<IEnumerable<InvoiceDto>> GetInvoices()
         {
-            return await _context.Invoices
+            var invoices = await _context.Invoices
                 .Include(i => i.User)
                 .Include(i => i.InvoiceState)
                 .Include(i => i.PaymentMethod)
                 .ToListAsync();
+            
+            var saleItems = await _context.SaleItems
+                .Include(s => s.Product)
+                .ToListAsync();
+            
+            return invoices.Select(i => InvoiceMapper.MapInvoiceToDTO(i, InvoiceMapper.ToSaleItemDto(saleItems.Where(s => s.InvoiceId == i.Id).ToList())));
         }
 
-        public Task<Invoice> UpdateInvoice(int id, Invoice invoice)
+        public async Task<InvoiceDto?> UpdateInvoiceItem(int invoiceId, int productId, int? newProductId, int? quantity, bool? isAddition)
         {
-            throw new NotImplementedException();
+            var invoice = await _context.Invoices.Include(i => i.SaleItems).FirstOrDefaultAsync(i => i.Id == invoiceId);
+
+            if (invoice == null)
+                throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");
+            
+            var saleItem = invoice.SaleItems.FirstOrDefault(s => s.ProductId == productId);
+
+            if (saleItem == null)
+                throw new KeyNotFoundException($"Sale item with product ID {productId} not found.");
+            
+            if (isAddition == true)
+                saleItem.Quantity += quantity ?? 1;
+            else
+                saleItem.Quantity -= quantity ?? 1;
+
+            if (newProductId != null)
+                await UpdateProduct(saleItem, newProductId.Value);
+
+            invoice.PriceWithoutVAT = invoice.SaleItems.Sum(s => s.UnitPrice * s.Quantity);
+            invoice.TotalVAT = invoice.PriceWithoutVAT * 0.19;
+            invoice.FinalPrice = invoice.PriceWithoutVAT + invoice.TotalVAT;
+
+            await _context.SaveChangesAsync();
+
+            return InvoiceMapper.MapInvoiceToDTO(invoice, InvoiceMapper.ToSaleItemDto(invoice.SaleItems));
         }
+
+        public async Task UpdateProduct(SaleItem saleItem, int newProductId)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == newProductId);
+            if (product == null)
+                throw new KeyNotFoundException($"Product with ID {newProductId} not found.");
+
+            _context.SaleItems.Remove(saleItem);
+            await _context.SaveChangesAsync();
+
+            var newSaleItem = new SaleItem
+            {
+                InvoiceId = saleItem.InvoiceId,
+                ProductId = newProductId,
+                Quantity = saleItem.Quantity,
+                UnitPrice = product.Price
+            };
+
+            await _context.SaleItems.AddAsync(newSaleItem);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

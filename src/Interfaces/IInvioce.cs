@@ -9,8 +9,9 @@ namespace ControlDeVenta_Proy.src.Interfaces
 {
     public interface IInvioce
     {
-        Task<IEnumerable<Invoice>> GetInvoices();
-        Task<Invoice> GenerateInvoice(ClientDTO client);
-        Task<Invoice> UpdateInvoice(int id, Invoice invoice);
+        Task<IEnumerable<InvoiceDto>> GetInvoices();
+        Task<InvoiceDto> GenerateInvoice(ClientDTO client);
+        Task<InvoiceDto?> UpdateInvoiceItem(int invoiceId, int productId, int? newProductId, int? quantity, bool? isAddition);
+        Task UpdateProduct(SaleItem saleItem, int newProductId);
     }
 }

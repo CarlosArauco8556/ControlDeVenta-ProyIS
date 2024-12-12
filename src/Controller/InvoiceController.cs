@@ -48,5 +48,19 @@ namespace ControlDeVenta_Proy.src.Controller
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{ivoiceId:int}/{productId:int}/{newProductId:int}/{quantity:int}/{isAddition:bool}")]
+        public async Task<IActionResult> UpdateInvoice1([FromRoute] int ivoiceId, [FromRoute] int productId, [FromRoute] int? newProductId, [FromRoute] int? quantity, [FromRoute] bool? isAddition)
+        {
+            try
+            {
+                var updatedInvoice = await _invoiceRepository.UpdateInvoiceItem(ivoiceId, productId, newProductId, quantity, isAddition);
+                return Ok(updatedInvoice);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

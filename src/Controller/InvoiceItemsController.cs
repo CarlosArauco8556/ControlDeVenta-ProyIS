@@ -28,10 +28,10 @@ namespace ControlDeVenta_Proy.src.Controller
             return Ok(invoiceItems);
         }
 
-        [HttpPost("{productId:int}")]
-        public async Task<IActionResult> AddInvoiceItem(int productId)
+        [HttpPost("{productId:int}/{quantity:int}")]
+        public async Task<IActionResult> AddInvoiceItem(int productId, int quantity)
         {
-            await _invoiceItemService.SaveInvoiceItemsToCookies(productId);
+            await _invoiceItemService.SaveInvoiceItemsToCookies(productId, quantity);
             return Ok();
         }
 

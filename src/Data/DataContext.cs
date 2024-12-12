@@ -52,7 +52,16 @@ namespace ControlDeVenta_Proy.src.Data
                 .HasOne(pp => pp.Product)
                 .WithMany(p => p.Supplies)
                 .HasForeignKey(pp => pp.ProductId);
+            
+            modelBuilder.Entity<Invoice>()
+            .HasMany(i => i.SaleItems)
+            .WithOne(s => s.Invoice) 
+            .HasForeignKey(s => s.InvoiceId); 
         }
 
+        internal async Task RemoveAsync(SaleItem? invoiceItem)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

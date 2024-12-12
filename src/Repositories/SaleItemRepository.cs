@@ -20,40 +20,39 @@ namespace ControlDeVenta_Proy.src.Repositories
             _invoiceItemRepository = invoiceItemRepository;
         }
 
-        public async Task<List<SaleItem>> CreateSaleItem(int invoiceId, List<int> productIds)
+        public async Task<List<SaleItem>> CreateSaleItem(int invoiceId, Dictionary<int, int> products)
         {
-            if (productIds == null || !productIds.Any())
-                throw new ArgumentException("No product IDs provided", nameof(productIds));
+            var saleItems = new List<SaleItem>();
+            var invoiceItems = await _invoiceItemRepository.GetInvoiceItemsFromCookies();
 
-            var invoice = await _context.Invoices
-                .FirstOrDefaultAsync(i => i.Id == invoiceId)
-                ?? throw new InvalidOperationException("Invoice not found");
-
-            var productsInDb = await _context.Products
-                .Where(p => productIds.Contains(p.Id))
-                .ToListAsync();
-
-            if (productsInDb.Count != productIds.Count)
-                throw new InvalidOperationException("One or more products not found");
-
-            var saleItems = productsInDb.Select(product => new SaleItem
+            foreach (var product in products)
             {
-                ProductId = product.Id,
-                InvoiceId = invoice.Id,
-                Quantity = 1, 
-                UnitPrice = product.Price,
-            }).ToList();
+                var productDb = await _context.Products.FirstOrDefaultAsync(x => x.Id == product.Key);
+                if (productDb != null)
+                {
+                    var saleItem = new SaleItem
+                    {
+                        InvoiceId = invoiceId,
+                        Invoice = await _context.Invoices.FirstOrDefaultAsync(x => x.Id == invoiceId) ?? new Invoice(),
+                        ProductId = product.Key,
+                        Product = productDb,
+                        Quantity = product.Value,
+                        UnitPrice = productDb.Price
+                    };
+                    saleItems.Add(saleItem);
+                }
+            }
             
             await _context.SaleItems.AddRangeAsync(saleItems);
             await _context.SaveChangesAsync();
-
             return saleItems;
         }
 
 
         public Task<List<SaleItem>> GetSaleItems()
         {
-            throw new NotImplementedException();
+            return _context.SaleItems.ToListAsync() ?? throw new ArgumentNullException("No sale items found.");
         }
+       
     }
 }

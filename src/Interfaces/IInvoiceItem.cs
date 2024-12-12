@@ -8,9 +8,11 @@ namespace ControlDeVenta_Proy.src.Interfaces
 {
     public interface IInvoiceItem
     {
-        Task<List<Product>> GetInvoiceItemsFromCookies();
+        Task<Dictionary<int, int>> GetInvoiceItemsFromCookies();
 
-        Task SaveInvoiceItemsToCookies(int productId);
+        Task SaveInvoiceItemsToCookies(int productId, int quantity);
+
+        Task UpdateInvoiceItemsToCookies(int productId, int quantity);
 
         Task RemoveInvoiceItem(int productId);
 

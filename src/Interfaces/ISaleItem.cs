@@ -8,7 +8,7 @@ namespace ControlDeVenta_Proy.src.Interfaces
 {
     public interface ISaleItem
     {
-        Task<List<SaleItem>> CreateSaleItem(int invoiceId, List<int> productId);
+        Task<List<SaleItem>> CreateSaleItem(int invoiceId, Dictionary<int, int> products);
         Task<List<SaleItem>> GetSaleItems();
     }
 }

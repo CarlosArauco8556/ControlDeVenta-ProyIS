@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241211173456_MigrationV12")]
-    partial class MigrationV12
+    [Migration("20241211213558_Migrationv12")]
+    partial class Migrationv12
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
