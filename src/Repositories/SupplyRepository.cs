@@ -32,6 +32,12 @@ namespace ControlDeVenta_Proy.src.Repositories
                 throw new Exception("Product not found");
             }
 
+            var existingSupply = await _context.Supplies.FirstOrDefaultAsync(s => s.ProductId == supplyDto.ProductId && s.SupplierId == supplyDto.SupplierId);
+            if(existingSupply != null)
+            {
+                throw new Exception("Supply already exists");
+            }
+
             if(supplyDto.DeliveryDate < supplyDto.OrderDate)
             {
                 throw new Exception("Delivery date must be greater than order date");
@@ -123,9 +129,70 @@ namespace ControlDeVenta_Proy.src.Repositories
             return await supplies.Skip(skipNumber).Take(query.pageSize).Select(s => s.MapToGetSupplyDto()).ToListAsync();
         }
 
-        public Task<GetSupplyDto> UpdateSupply(int productId, int supplierId, NewSupplyDto supplyDto)
+        public async Task<GetSupplyDto> UpdateSupply(int productId, int supplierId, NewSupplyDto supplyDto)
         {
-            throw new NotImplementedException();
+            var existingSupplier = await _context.Suppliers.FindAsync(supplierId);
+            if (existingSupplier == null)
+            {
+                throw new Exception("Supplier not found");
+            }
+
+            var existingProduct = await _context.Products.FindAsync(productId);
+            if (existingProduct == null)
+            {
+                throw new Exception("Product not found");
+            }
+
+            var existingSupply = await _context.Supplies.FirstOrDefaultAsync(s => s.ProductId == productId && s.SupplierId == supplierId);
+            if(existingSupply == null)
+            {
+                throw new Exception("Supply not found");
+            }
+
+            var existingSupplierToUpdate = await _context.Suppliers.FindAsync(supplyDto.SupplierId);
+            if (existingSupplierToUpdate == null)
+            {
+                throw new Exception("The supplier to be updated was not found");
+            }
+
+            var existingProductToUpdate = await _context.Products.FindAsync(supplyDto.ProductId);
+            if (existingProductToUpdate == null)
+            {
+                throw new Exception("The product to be updated was not found");
+            }
+
+            if(supplyDto.DeliveryDate < supplyDto.OrderDate)
+            {
+                throw new Exception("Delivery date must be greater than order date");
+            }
+
+            if (supplyDto.OrderDate > DateTime.Now)
+            {
+                throw new Exception("Order date must be less than current date");
+            }
+
+            if (supplyDto.DeliveryDate != DateTime.Now)
+            {
+                throw new Exception("Delivery date must be equal to current date");
+            }
+
+            if(supplyDto.Quantity <= 0)
+            {
+                throw new Exception("Quantity must be greater than 0");
+            }
+            
+            existingSupply.SupplierId = supplyDto.SupplierId;
+            existingSupply.ProductId = supplyDto.ProductId;
+            existingSupply.DeliveryDate = supplyDto.DeliveryDate;
+            existingSupply.OrderDate = supplyDto.OrderDate;
+            existingSupply.Product = existingProductToUpdate;
+            existingSupply.Supplier = existingSupplierToUpdate;
+            existingSupply.TotalPrice = supplyDto.Quantity * existingProductToUpdate.Price;
+            existingSupply.Quantity = supplyDto.Quantity;
+
+            await _context.SaveChangesAsync();
+
+            return existingSupply.MapToGetSupplyDto();
         }
     }
 }
