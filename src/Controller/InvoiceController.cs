@@ -98,6 +98,30 @@ namespace ControlDeVenta_Proy.src.Controller
             }
         }
 
+        [HttpPut("{invoiceId:int}")]
+        public async Task<IActionResult> UpdateInvoice2([FromRoute] int invoiceId)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (invoiceId <= 0)
+            {
+                return BadRequest("Invalid invoice ID.");
+            }
+
+            try
+            {
+                await _invoiceRepository.UpdateInvoiceStatus(invoiceId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpDelete("{invoiceId:int}")]
         public async Task<IActionResult> DeleteInvoice([FromRoute] int invoiceId)
         {

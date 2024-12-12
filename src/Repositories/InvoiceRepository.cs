@@ -145,6 +145,20 @@ namespace ControlDeVenta_Proy.src.Repositories
             return InvoiceMapper.MapInvoiceToDTO(invoice, InvoiceMapper.ToSaleItemDto(invoice.SaleItems));
         }
 
+        public async Task UpdateInvoiceStatus(int invoiceId)
+        {
+            var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.Id == invoiceId) ?? throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");
+            
+            if (invoice.InvoiceStateId == 2)
+                throw new InvalidOperationException("Invoice already delivered.");
+
+            var invoiceState = _context.InvoiceStates.FirstOrDefault(i => i.Id == 2) ?? throw new KeyNotFoundException("Invoice state 'Entregada' not found.");
+
+            invoice.InvoiceStateId = invoiceState.Id;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateProduct(SaleItem saleItem, int newProductId)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == newProductId);

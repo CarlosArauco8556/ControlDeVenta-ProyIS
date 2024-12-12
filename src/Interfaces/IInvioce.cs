@@ -13,6 +13,7 @@ namespace ControlDeVenta_Proy.src.Interfaces
         Task<InvoiceDto> GenerateInvoice(ClientDTO client);
         Task<InvoiceDto?> UpdateInvoiceItem(int invoiceId, int productId, int? newProductId, int? quantity, bool? isAddition);
         Task UpdateProduct(SaleItem saleItem, int newProductId);
+        Task UpdateInvoiceStatus(int invoiceId);
         Task DeleteInvoice(int invoiceId);
     }
 }
