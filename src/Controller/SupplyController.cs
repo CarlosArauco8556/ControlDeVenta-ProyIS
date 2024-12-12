@@ -1,4 +1,3 @@
-
 using ControlDeVenta_Proy.src.Helpers;
 using ControlDeVenta_Proy.src.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +7,7 @@ namespace ControlDeVenta_Proy.src.Controller
 {
     [ApiController]
     [Route("api/[Controller]")]
-    [Authorize("Admin, User")]
+    [Authorize(Roles= "Admin, User")]
     public class SupplyController : ControllerBase
     {
         public readonly ISupplyRepository _supplyRepository;

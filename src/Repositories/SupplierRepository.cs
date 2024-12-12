@@ -73,6 +73,12 @@ namespace ControlDeVenta_Proy.src.Repositories
                 throw new Exception("Supplier not found");
             }
 
+            var supplierHasSupplies = existingSupplier.Supplies.Any();
+            if(supplierHasSupplies)
+            {
+                throw new Exception("You can't delete a supplier that has supplies.");
+            }
+
             _context.Suppliers.Remove(existingSupplier);
             await _context.SaveChangesAsync();
             return existingSupplier.MapToNewSupplierDto();

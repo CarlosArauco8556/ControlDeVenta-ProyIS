@@ -23,6 +23,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+builder.Services.AddScoped<ISupplyRepository, SupplyRepository>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(
     opt => {

@@ -32,10 +32,10 @@ namespace ControlDeVenta_Proy.src.Repositories
                 throw new Exception("Product not found");
             }
 
-            var existingSupply = await _context.Supplies.FirstOrDefaultAsync(s => s.ProductId == supplyDto.ProductId && s.SupplierId == supplyDto.SupplierId);
-            if(existingSupply != null)
+            var productInSupplierProducts = existingSupplier.Products.Find(p => p.Id == existingProduct.Id);
+            if(productInSupplierProducts == null)
             {
-                throw new Exception("Supply already exists");
+                throw new Exception("Product not found in supplier products");
             }
 
             if(supplyDto.DeliveryDate < supplyDto.OrderDate)
@@ -46,11 +46,6 @@ namespace ControlDeVenta_Proy.src.Repositories
             if (supplyDto.OrderDate > DateTime.Now)
             {
                 throw new Exception("Order date must be less than current date");
-            }
-
-            if (supplyDto.DeliveryDate != DateTime.Now)
-            {
-                throw new Exception("Delivery date must be equal to current date");
             }
 
             if(supplyDto.Quantity <= 0)
@@ -64,6 +59,9 @@ namespace ControlDeVenta_Proy.src.Repositories
             supply.TotalPrice = supply.Quantity * existingProduct.Price;
 
             await _context.Supplies.AddAsync(supply);
+
+            existingProduct.Stock += supply.Quantity;
+
             await _context.SaveChangesAsync();
 
             var newSupply = await _context.Supplies.FirstOrDefaultAsync(s => s.ProductId == supply.ProductId && s.SupplierId == supply.SupplierId);
@@ -78,11 +76,19 @@ namespace ControlDeVenta_Proy.src.Repositories
 
         public async Task<GetSupplyDto> DeleteSupply(int productId, int supplierId)
         {
+            var existingProduct = await _context.Products.FindAsync(productId);
+            if (existingProduct == null)
+            {
+                throw new Exception("Product not found");
+            }
+
             var supply = await _context.Supplies.FirstOrDefaultAsync(s => s.ProductId == productId && s.SupplierId == supplierId);
             if(supply == null)
             {
                 throw new Exception("Supply not found");
             }
+
+            existingProduct.Stock -= supply.Quantity;
             
             _context.Supplies.Remove(supply);
             await _context.SaveChangesAsync();
@@ -149,16 +155,65 @@ namespace ControlDeVenta_Proy.src.Repositories
                 throw new Exception("Supply not found");
             }
 
-            var existingSupplierToUpdate = await _context.Suppliers.FindAsync(supplyDto.SupplierId);
-            if (existingSupplierToUpdate == null)
+            bool supplierIdChanged = existingSupply.SupplierId != supplyDto.SupplierId;
+            if(supplierIdChanged)
             {
-                throw new Exception("The supplier to be updated was not found");
+                var existingSupplierToUpdate = await _context.Suppliers.FindAsync(supplyDto.SupplierId);
+                if (existingSupplierToUpdate == null)
+                {
+                    throw new Exception("The supplier to be updated was not found");
+                }
+
+                existingSupply.Supplier = existingSupplierToUpdate;
             }
 
-            var existingProductToUpdate = await _context.Products.FindAsync(supplyDto.ProductId);
-            if (existingProductToUpdate == null)
+            bool productIdChanged = existingSupply.ProductId != supplyDto.ProductId;
+            if(productIdChanged)
             {
-                throw new Exception("The product to be updated was not found");
+                var existingProductToUpdate = await _context.Products.FindAsync(supplyDto.ProductId);
+                if (existingProductToUpdate == null)
+                {
+                    throw new Exception("The product to be updated was not found");
+                }
+
+                existingSupply.Product = existingProductToUpdate;
+            }
+
+            if(supplierIdChanged || productIdChanged)
+            {
+                var productInSupplierProducts = existingSupplier.Products.Find(p => p.Id == existingProduct.Id);
+                if(productInSupplierProducts == null)
+                {
+                    throw new Exception("Product not found in supplier products");
+                }
+            }
+
+            bool quantityChanged = existingSupply.Quantity != supplyDto.Quantity;
+            if(quantityChanged && productIdChanged == false)
+            {
+                existingProduct.Stock = existingProduct.Stock - existingSupply.Quantity + supplyDto.Quantity;
+            }
+            if(quantityChanged && productIdChanged)
+            {
+                existingProduct.Stock = existingProduct.Stock - existingSupply.Quantity;
+
+                var existingProductChanged = await _context.Products.FindAsync(supplyDto.ProductId);
+                if (existingProductChanged == null)
+                {
+                    throw new Exception("The product to be updated was not found");
+                }
+                existingProductChanged.Stock += supplyDto.Quantity;
+            }
+            if(quantityChanged == false && productIdChanged)
+            {
+                existingProduct.Stock = existingProduct.Stock - existingSupply.Quantity;
+
+                var existingProductChanged = await _context.Products.FindAsync(supplyDto.ProductId);
+                if (existingProductChanged == null)
+                {
+                    throw new Exception("The product to be updated was not found");
+                }
+                existingProductChanged.Stock += existingSupply.Quantity;
             }
 
             if(supplyDto.DeliveryDate < supplyDto.OrderDate)
@@ -171,11 +226,6 @@ namespace ControlDeVenta_Proy.src.Repositories
                 throw new Exception("Order date must be less than current date");
             }
 
-            if (supplyDto.DeliveryDate != DateTime.Now)
-            {
-                throw new Exception("Delivery date must be equal to current date");
-            }
-
             if(supplyDto.Quantity <= 0)
             {
                 throw new Exception("Quantity must be greater than 0");
@@ -185,10 +235,8 @@ namespace ControlDeVenta_Proy.src.Repositories
             existingSupply.ProductId = supplyDto.ProductId;
             existingSupply.DeliveryDate = supplyDto.DeliveryDate;
             existingSupply.OrderDate = supplyDto.OrderDate;
-            existingSupply.Product = existingProductToUpdate;
-            existingSupply.Supplier = existingSupplierToUpdate;
-            existingSupply.TotalPrice = supplyDto.Quantity * existingProductToUpdate.Price;
-            existingSupply.Quantity = supplyDto.Quantity;
+            existingSupply.TotalPrice = supplyDto.Quantity * existingSupply.Product.Price;
+            existingSupply.Quantity = supplyDto.Quantity;  
 
             await _context.SaveChangesAsync();
 
