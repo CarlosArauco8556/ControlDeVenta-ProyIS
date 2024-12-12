@@ -27,6 +27,19 @@ namespace ControlDeVenta_Proy.src.Repositories
             _saleItemRepository = saleItemRepository;
         }
 
+        public async Task DeleteInvoice(int invoiceId)
+        {
+            var invoice = await _context.Invoices
+                .Include(i => i.SaleItems)
+                .FirstOrDefaultAsync(i => i.Id == invoiceId)
+                ?? throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");
+
+            _context.SaleItems.RemoveRange(invoice.SaleItems);
+            _context.Invoices.Remove(invoice);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<InvoiceDto> GenerateInvoice(ClientDTO client)
         {
             if (string.IsNullOrWhiteSpace(client.Email)) throw new ArgumentException("Client email is required.");

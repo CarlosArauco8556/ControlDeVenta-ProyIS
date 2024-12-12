@@ -58,10 +58,5 @@ namespace ControlDeVenta_Proy.src.Data
             .WithOne(s => s.Invoice) 
             .HasForeignKey(s => s.InvoiceId); 
         }
-
-        internal async Task RemoveAsync(SaleItem? invoiceItem)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
