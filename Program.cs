@@ -13,6 +13,14 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod() 
+               .AllowAnyHeader()); 
+});
+
 Env.Load();
 
 // Add services to the container.
@@ -22,8 +30,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IInvioce, InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceItem, InvoiceItemsService>();
+builder.Services.AddScoped<ISaleItem, SaleItemRepository>();
+builder.Services.AddScoped<IInvoiceCode, InvoiceCodeRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISupplyRepository, SupplyRepository>();
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(
     opt => {
@@ -104,6 +119,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

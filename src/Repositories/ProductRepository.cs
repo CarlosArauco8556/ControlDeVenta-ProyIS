@@ -48,11 +48,23 @@ namespace ControlDeVenta_Proy.src.Repositories
             {
                 throw new Exception("Product not found.");
             }
+
+            var productHasSupplies = product.Supplies.Any();
+            if (productHasSupplies)
+            {
+                throw new Exception("You can't delete a product that has supplies.");
+            }
             
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
             return product.MapToNewProductDto();
+        }
+
+        public async Task<Product> GetProductById(int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            return product ?? throw new Exception("Product not found.");
         }
 
         public async Task<IEnumerable<NewProductDto>> GetProducts(QueryObject query)

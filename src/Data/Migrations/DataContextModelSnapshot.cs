@@ -107,6 +107,9 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                     b.Property<double>("FinalPrice")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("InvoiceCodeId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("InvoiceStateId")
                         .HasColumnType("INTEGER");
 
@@ -124,6 +127,8 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InvoiceCodeId");
 
                     b.HasIndex("InvoiceStateId");
 
@@ -191,12 +196,23 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.SaleItem", b =>
+            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Purchase.InvoiceCode", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InvoiceCodes");
+                });
+
+            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.SaleItem", b =>
+                {
                     b.Property<int>("InvoiceId")
                         .HasColumnType("INTEGER");
 
@@ -212,9 +228,7 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                     b.Property<double>("UnitPrice")
                         .HasColumnType("REAL");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvoiceId");
+                    b.HasKey("InvoiceId", "ProductId");
 
                     b.HasIndex("ProductId");
 
@@ -421,19 +435,25 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
                     b.HasIndex("SuppliersId");
 
-                    b.ToTable("SupplierProducts", (string)null);
+                    b.ToTable("ProductSupplier");
                 });
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Invoice", b =>
                 {
+                    b.HasOne("ControlDeVenta_Proy.src.Models.Purchase.InvoiceCode", "InvoiceCode")
+                        .WithMany()
+                        .HasForeignKey("InvoiceCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ControlDeVenta_Proy.src.Models.InvoiceState", "InvoiceState")
-                        .WithMany("Invoices")
+                        .WithMany()
                         .HasForeignKey("InvoiceStateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ControlDeVenta_Proy.src.Models.PaymentMethod", "PaymentMethod")
-                        .WithMany("Invoices")
+                        .WithMany()
                         .HasForeignKey("PaymentMethodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -443,6 +463,8 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("InvoiceCode");
 
                     b.Navigation("InvoiceState");
 
@@ -563,16 +585,6 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Invoice", b =>
                 {
                     b.Navigation("SaleItems");
-                });
-
-            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.InvoiceState", b =>
-                {
-                    b.Navigation("Invoices");
-                });
-
-            modelBuilder.Entity("ControlDeVenta_Proy.src.Models.PaymentMethod", b =>
-                {
-                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Product", b =>
