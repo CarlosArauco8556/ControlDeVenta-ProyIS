@@ -14,5 +14,6 @@ namespace ControlDeVenta_Proy.src.Models
         public List<SaleItem> SaleItems { get; } = new List<SaleItem>();
         [System.Text.Json.Serialization.JsonIgnore]
         public List<Supply> Supplies { get; } = new List<Supply>();
+        public List<Supplier> Suppliers { get; } = new List<Supplier>();
     }
 }
