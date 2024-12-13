@@ -9,10 +9,7 @@ namespace ControlDeVenta_Proy.src.Models
         public double DiscountPercentage { get; set; }
         public int Stock { get; set; }
         public int StockMin { get; set; }
-
-        [System.Text.Json.Serialization.JsonIgnore]
         public List<SaleItem> SaleItems { get; } = new List<SaleItem>();
-        [System.Text.Json.Serialization.JsonIgnore]
         public List<Supply> Supplies { get; } = new List<Supply>();
         public List<Supplier> Suppliers { get; } = new List<Supplier>();
     }

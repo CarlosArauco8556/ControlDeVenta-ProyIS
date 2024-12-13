@@ -32,29 +32,6 @@ namespace ControlDeVenta_Proy.src.Data
                     }
                 }
 
-                if (context.InvoiceStates.Count() == 0)
-                {
-                    var invoiceStates = new List<InvoiceState>
-                    {
-                        new InvoiceState { Name = "Pendiente" },
-                        new InvoiceState { Name = "Entregada" },
-                        new InvoiceState { Name = "Cancelada" }
-                    };
-
-                    context.InvoiceStates.AddRange(invoiceStates);
-                }
-
-                if (context.PaymentMethods.Count() == 0)
-                {
-                    var paymentMethods = new List<PaymentMethod>
-                    {
-                        new PaymentMethod { Name = "Efectivo" },
-                        new PaymentMethod { Name = "Transferenncia" },
-                    };
-
-                    context.PaymentMethods.AddRange(paymentMethods);
-                }
-
                 if (!context.Products.Any())
                 {
                     var ProductFaker = new Faker<Product>()
