@@ -39,22 +39,24 @@ namespace ControlDeVenta_Proy.src.Data
                 .HasForeignKey(pc => pc.ProductId); 
 
             modelBuilder.Entity<Supply>()
-                .HasKey(pp => new { pp.SupplierId, pp.ProductId }); 
+                .HasKey(s => s.Id);
+                
+            modelBuilder.Entity<Supply>()
+                .HasOne(s => s.Product)
+                .WithMany(p => p.Supplies)
+                .HasForeignKey(s => s.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Supply>()
-                .HasOne(pp => pp.Supplier) 
-                .WithMany(p => p.Supplies)
-                .HasForeignKey(pp => pp.SupplierId); 
+                .HasOne(s => s.Supplier)
+                .WithMany(s => s.Supplies)
+                .HasForeignKey(s => s.SupplierId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Supply>()
-                .HasOne(pp => pp.Product)
-                .WithMany(p => p.Supplies)
-                .HasForeignKey(pp => pp.ProductId);
-            
             modelBuilder.Entity<Invoice>()
-            .HasMany(i => i.SaleItems)
-            .WithOne(s => s.Invoice) 
-            .HasForeignKey(s => s.InvoiceId); 
+                .HasMany(i => i.SaleItems)
+                .WithOne(s => s.Invoice) 
+                .HasForeignKey(s => s.InvoiceId); 
         }
     }
 }
