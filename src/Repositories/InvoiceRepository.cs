@@ -137,7 +137,11 @@ namespace ControlDeVenta_Proy.src.Repositories
 
         public async Task<InvoiceDto?> UpdateInvoiceItem(int invoiceId, int productId, int? newProductId, int? quantity, bool? isAddition)
         {
-            var invoice = await _context.Invoices.Include(i => i.SaleItems).FirstOrDefaultAsync(i => i.Id == invoiceId);
+            var invoice = await _context.Invoices
+            .Include(i => i.SaleItems)
+                .ThenInclude(s => s.Product) 
+            .Include(i => i.InvoiceCode)
+            .FirstOrDefaultAsync(i => i.Id == invoiceId);
 
             if (invoice == null)
                 throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");

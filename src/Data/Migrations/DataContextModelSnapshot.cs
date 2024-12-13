@@ -432,7 +432,7 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
                     b.HasIndex("SuppliersId");
 
-                    b.ToTable("SupplierProducts", (string)null);
+                    b.ToTable("ProductSupplier");
                 });
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Invoice", b =>
@@ -456,7 +456,7 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("ControlDeVenta_Proy.src.Models.AppUser", "User")
-                        .WithMany()
+                        .WithMany("Invoices")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

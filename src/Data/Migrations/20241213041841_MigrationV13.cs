@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Migrationv13 : Migration
+    public partial class MigrationV13 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -276,6 +276,30 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductSupplier",
+                columns: table => new
+                {
+                    ProductsId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SuppliersId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductSupplier", x => new { x.ProductsId, x.SuppliersId });
+                    table.ForeignKey(
+                        name: "FK_ProductSupplier_Products_ProductsId",
+                        column: x => x.ProductsId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductSupplier_Suppliers_SuppliersId",
+                        column: x => x.SuppliersId,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Supplies",
                 columns: table => new
                 {
@@ -389,6 +413,11 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductSupplier_SuppliersId",
+                table: "ProductSupplier",
+                column: "SuppliersId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SaleItems_ProductId",
                 table: "SaleItems",
                 column: "ProductId");
@@ -416,6 +445,9 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "ProductSupplier");
 
             migrationBuilder.DropTable(
                 name: "SaleItems");

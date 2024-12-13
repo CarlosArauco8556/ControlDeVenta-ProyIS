@@ -61,7 +61,7 @@ namespace ControlDeVenta_Proy.src.Repositories
             return product ?? throw new Exception("Product not found.");
         }
 
-        public async Task<IEnumerable<NewPorductDto>> GetProducts(QueryObject query)
+        public async Task<IEnumerable<NewProductDto>> GetProducts(QueryObject query)
         {
             var products = _context.Products.AsQueryable();
 

@@ -26,6 +26,7 @@ builder.Services.AddScoped<IInvioce, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceItem, InvoiceItemsService>();
 builder.Services.AddScoped<ISaleItem, SaleItemRepository>();
 builder.Services.AddScoped<IInvoiceCode, InvoiceCodeRepository>();
+builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(
