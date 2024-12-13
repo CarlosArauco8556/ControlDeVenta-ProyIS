@@ -33,6 +33,11 @@ namespace ControlDeVenta_Proy.src.Repositories
                 throw new Exception("Supplier email already exists");
             }
 
+            if (!RutValidations.IsValidRut(supplierDto.Rut))
+            {
+                throw new Exception("Invalid Rut format or verification digit.");
+            }
+
             foreach (string productName in supplierDto.ProductNames)
             {
                 var product = await _context.Products.FirstOrDefaultAsync(p => p.Name == productName);
@@ -138,6 +143,11 @@ namespace ControlDeVenta_Proy.src.Repositories
                 {
                     throw new Exception("Product not found");
                 }
+            }
+
+            if (!RutValidations.IsValidRut(supplierDto.Rut))
+            {
+                throw new Exception("Invalid Rut format or verification digit.");
             }
 
             bool nameChanged = existingSupplier.Name != supplierDto.Name;

@@ -1,4 +1,5 @@
 using ControlDeVenta_Proy.src.Dtos;
+using ControlDeVenta_Proy.src.Helpers;
 using ControlDeVenta_Proy.src.Interfaces;
 using ControlDeVenta_Proy.src.Models;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +35,8 @@ namespace ControlDeVenta_Proy.src.Controller
                 if (string.IsNullOrEmpty(registerDto.Rut)) return BadRequest("RUT is required.");
 
                 if (await _userManager.Users.AnyAsync(p => p.Rut == registerDto.Rut)) return BadRequest("Rut already exists.");
+                
+                if (!RutValidations.IsValidRut(registerDto.Rut)) return BadRequest("Invalid Rut format or verification digit.");
 
                 if (string.IsNullOrEmpty(registerDto.Password) || string.IsNullOrEmpty(registerDto.ConfirmPassword)) return BadRequest("Password is required.");
 
