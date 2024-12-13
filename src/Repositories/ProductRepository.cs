@@ -61,6 +61,12 @@ namespace ControlDeVenta_Proy.src.Repositories
             return product.MapToNewProductDto();
         }
 
+        public async Task<Product> GetProductById(int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            return product ?? throw new Exception("Product not found.");
+        }
+
         public async Task<IEnumerable<NewProductDto>> GetProducts(QueryObject query)
         {
             var products = _context.Products.AsQueryable();
