@@ -35,6 +35,9 @@ namespace ControlDeVenta_Proy.src.Repositories
                 .Include(i => i.SaleItems)
                 .FirstOrDefaultAsync(i => i.Id == invoiceId)
                 ?? throw new KeyNotFoundException($"Invoice with ID {invoiceId} not found.");
+            
+            if (invoice.InvoiceStateId == 2)
+                throw new InvalidOperationException("Cannot delete delivered invoice.");
 
             _context.SaleItems.RemoveRange(invoice.SaleItems);
             _context.Invoices.Remove(invoice);
