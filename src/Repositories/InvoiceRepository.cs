@@ -122,6 +122,7 @@ namespace ControlDeVenta_Proy.src.Repositories
                 .Include(i => i.User)
                 .Include(i => i.InvoiceState)
                 .Include(i => i.PaymentMethod)
+                .Include(i => i.InvoiceCode)
                 .ToListAsync();
             
             var saleItems = await _context.SaleItems

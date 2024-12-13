@@ -14,6 +14,7 @@ namespace ControlDeVenta_Proy.src.Mappers
             return new InvoiceDto
             {
                 Factura = invoice.Id,
+                Code = invoice.InvoiceCode.Code,
                 Descripcion = invoice.Description,
                 Fecha = invoice.CreationDate,
                 PriceWithoutVAT = invoice.PriceWithoutVAT,
