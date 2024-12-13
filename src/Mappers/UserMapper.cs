@@ -20,5 +20,15 @@ namespace ControlDeVenta_Proy.src.Mappers
                 PhoneNumber = appUserModel.PhoneNumber
             };
         }
+
+        public static AppUserResponseDto ToResponseAppUserDto(this AppUser user)
+        {
+            return new AppUserResponseDto
+            {
+                Name = user.Name,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+            };
+        }
     }
 }

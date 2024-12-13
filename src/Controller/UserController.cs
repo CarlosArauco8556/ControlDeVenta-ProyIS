@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ControlDeVenta_Proy.src.Dtos;
 using ControlDeVenta_Proy.src.Interfaces;
@@ -37,6 +38,26 @@ namespace ControlDeVenta_Proy.src.Controller
                 return NotFound(new {message = "Usuario NO encontrado."});
             }
             return Ok(new {message = "Usuario eliminado exitosamente"});
+        }
+
+        [HttpPut("edit")]
+        public async Task<IActionResult> EditUser([FromBody] AppUserUpdateDto appUserUpdateDto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized("Usuario NO autenticado. Inicie sesión primero.");
+
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null) return NotFound("Usuario no encontrado.");
+
+            user.Name = appUserUpdateDto.Name;
+            user.PhoneNumber = appUserUpdateDto.PhoneNumber;
+
+            var result = await _userRepository.EditProfile(user);
+            if (!result) return StatusCode(500, "Error en editar perfil.");
+
+            return Ok(user.ToResponseAppUserDto());
         }
     }
 }

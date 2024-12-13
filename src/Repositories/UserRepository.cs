@@ -29,6 +29,12 @@ namespace ControlDeVenta_Proy.src.Repositories
             return true;
         }
 
+        public async Task<bool> EditProfile(AppUser user)
+        {
+            _context.Users.Update(user);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
         public async Task<IEnumerable<AppUser>> GetAllUsers()
         {
             return await _context.Users.OfType<AppUser>().ToListAsync();

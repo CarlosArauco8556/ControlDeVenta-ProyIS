@@ -11,5 +11,6 @@ namespace ControlDeVenta_Proy.src.Interfaces
         Task<IEnumerable<AppUser>> GetAllUsers();
         Task<AppUser?> GetUserById(string id);
         Task<bool> DeleteUserById(string id);
+        Task<bool> EditProfile(AppUser user);
     }
 }
