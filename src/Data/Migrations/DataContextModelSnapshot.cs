@@ -264,30 +264,33 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
 
             modelBuilder.Entity("ControlDeVenta_Proy.src.Models.Supply", b =>
                 {
-                    b.Property<int>("SupplierId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DeliveryDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SupplierId")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("REAL");
 
-                    b.HasKey("SupplierId", "ProductId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("Supplies");
                 });

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControlDeVenta_Proy.src.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationV13 : Migration
+    public partial class MigrationV14 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -303,17 +303,18 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 name: "Supplies",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
-                    SupplierId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
-                    TotalPrice = table.Column<double>(type: "REAL", nullable: false)
+                    TotalPrice = table.Column<double>(type: "REAL", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SupplierId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Supplies", x => new { x.SupplierId, x.ProductId });
+                    table.PrimaryKey("PK_Supplies", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Supplies_Products_ProductId",
                         column: x => x.ProductId,
@@ -426,6 +427,11 @@ namespace ControlDeVenta_Proy.src.Data.Migrations
                 name: "IX_Supplies_ProductId",
                 table: "Supplies",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Supplies_SupplierId",
+                table: "Supplies",
+                column: "SupplierId");
         }
 
         /// <inheritdoc />
