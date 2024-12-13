@@ -1,6 +1,6 @@
 # Exlude bin and obj folder
-bin/
-obj/
+/bin/
+/obj/
 
 # IDEs
 .vscode/
